@@ -3,6 +3,16 @@ VERSION ?= 0.0.1
 
 DOCKER_ARGS := --rm  --name ${NAME} -v ${PWD}:/src -w /src ${NAME}
 
+
+# git remote add eqemu git@github.com:EQEmu/server.git
+# git fetch eqemu
+# git checkout -b eqemu-master eqemu/master
+# git branch xackery/2024-03-18 # create a new branch based on latest main
+# git checkout xackery/2024-03-18 # switch to the new branch
+# git merge eqemu-master xackery/2024-03-18 # merge all the changes on my eqemu-master branch to xackery/may-latest
+# git remote rm eqemu # remove the eqemu remote
+# git branch -d eqemu-master # remove the eqemu-master branch locally
+
 # Run 'ninja' in build directory
 .PHONY: build
 build:
