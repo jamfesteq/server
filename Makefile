@@ -32,8 +32,10 @@ cmake:
 
 clean:
 	rm -rf build
+
 # Run 'cmake' in ubuntu docker container
 docker-cmake: docker-image-build
+	git submodule update --init --recursive
 	docker run ${DOCKER_ARGS} make cmake
 
 # Run 'ninja' in ubuntu docker container
@@ -42,27 +44,10 @@ docker-build: docker-image-build
 
 # Build image if it doesn't exist
 docker-image-build:
-ifeq ($(shell docker images -q ${NAME} 2> /dev/null),)
 	@echo "Docker image not found. Building..."
 	cd .devcontainer && docker build -f Dockerfile.ubuntu.dev -t ${NAME} .
-endif
-
-# Run 'cmake' in passed docker container
-docker-cmake-%: docker-image-build-%
-	docker run ${DOCKER_ARGS}-$* make cmake BUILD_SUFFIX=-$*
-
-# Run 'ninja' in passed docker container
-docker-build-%: docker-image-build-%
-	docker run ${DOCKER_ARGS}-$* make build BUILD_SUFFIX=-$*
 
 docker-clean: clean
-
-# Build image if it doesn't exist
-docker-image-build-%:
-ifeq ($(shell docker images -q ${NAME}-$* 2> /dev/null),)
-	@echo "Docker image ${NAME}-$* not found. Building..."
-	cd .devcontainer && docker build -f Dockerfile.$*.dev -t ${NAME}-$* .
-endif
 
 # CICD triggers this
 set-version:
