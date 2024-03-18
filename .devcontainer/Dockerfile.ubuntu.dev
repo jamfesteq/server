@@ -1,4 +1,4 @@
-# This is a "dev" image for running ryxemu in development, also for dev containers
+# This is a "dev" image for running eqemu in development, also for dev containers
 ARG USERNAME=user-name-goes-here
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
