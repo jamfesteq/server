@@ -90,7 +90,7 @@
 			"name": "(gdb) login",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/build/bin/login",
+			"program": "${workspaceFolder}/build/bin/loginserver",
 			"cwd": "${workspaceFolder}/build/bin",
 			"MIMode": "gdb",
 			"setupCommands": [

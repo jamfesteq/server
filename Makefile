@@ -62,12 +62,14 @@ OS := $(shell uname -s)
 .PHONY: prep
 prep:
 	@echo "Preparing build/bin for usage..."
-	@-cd build/bin && unlink assets
-	@cd build/bin && ln -s ../../base/assets assets
-	@cp -R -u -p base/login.ini build/bin/login.ini
-	@cp -R -u -p base/config.yaml build/bin/config.yaml
-	@mkdir -p build/bin/logs
-	@mkdir -p build/bin/shared
+	cp -R -u -p base/eqemu_config.json build/bin/eqemu_config.json
+	cp -R -u -p base/login.json build/bin/login.json
+	cp -R -u -p loginserver/login_util/* build/bin/assets/patches/
+	mkdir -p build/bin/assets
+	cp -R -u -p utils/patches build/bin/assets/
+	cd build/bin && ln -s quests/lua_modules lua_modules
+	mkdir -p build/bin/logs
+	mkdir -p build/bin/shared
 	@echo "Eqemu is prepared"
 
 # Runs tests
@@ -78,7 +80,7 @@ test:
 # Runs login binary
 .PHONY: login
 login:
-	cd build/bin && ./login
+	cd build/bin && ./loginserver
 
 # Runs shared_memory binary
 .PHONY: shared
@@ -112,8 +114,7 @@ queryserv:
 # Start mariaDB standalone
 .PHONY: mariadb
 mariadb:
-	@-killall mariadbd
-	cd build/bin/db/${MARIADB_FOLDER}/bin && ./mysqld_safe --defaults-file=${PWD}/build/bin/db/my.cnf &
+	@sudo service mariadb start
 
 # Backs up the database
 .PHONY: backup-db
@@ -154,12 +155,25 @@ init-mariadb:
 
 .PHONY: inject-mariadb
 inject-mariadb:
-	-mysql -u root -S /var/run/mysqld/mysqld.sock -e 'CREATE DATABASE ryx;'
-	-mysql -u root -S /var/run/mysqld/mysqld.sock -e "CREATE USER 'ryx'@'127.0.0.1' IDENTIFIED BY 'ryxpass';"
-	-mysql -u root -S /var/run/mysqld/mysqld.sock -e "GRANT ALL PRIVILEGES ON *.* TO 'ryx'@'127.0.0.1';"
-	-unzip -p base/db.sql.zip | mysql -u root -S /var/run/mysqld/mysqld.sock --database ryx
+	-sudo service mariadb start
+	-mkdir -p base
+	-sudo mariadb -e 'DROP DATABASE IF EXISTS peq;'
+	-sudo mariadb -e 'CREATE DATABASE peq;'
+	-sudo mariadb -e "CREATE USER 'peq'@'127.0.0.1' IDENTIFIED BY 'peqpass';"
+	-sudo mariadb -e "GRANT ALL PRIVILEGES ON *.* TO 'peq'@'127.0.0.1';"
+ifeq (,$(wildcard base/db/db.sql.zip))
+	@echo "base/db.sql.zip not found. Please download the database from https://www.eqemulator.org/downloads/downloads.php?do=file&id=1"
+	wget -nc https://db.projecteq.net/api/v1/dump/archive/peq-1710835223.zip -O base/db.sql.zip
+endif
+	-cd base/db && sudo service mariadb start && unzip -f db.sql.zip
+	@echo "Sourcing db may take a while, please wait..."
+	@cd base/db/peq-dump && sudo mariadb --database peq -e "source create_all_tables.sql"
 	@echo "MariaDB is now injected."
 
+.PHONY: gm-%
+gm-%:
+	sudo mariadb --database peq -e "UPDATE account SET status=255 WHERE name = '$*';"
+	@echo "Account $* is now a GM. /camp to have it go into effect."
 
 depends:
 	sudo apt install graphviz pip time
