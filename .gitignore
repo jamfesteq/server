@@ -71,3 +71,4 @@ cmake-build-relwithdebinfo/*
 base/*.sql
 base/*.zip
 base/db/
+base/maps/

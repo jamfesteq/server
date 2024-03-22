@@ -67,10 +67,24 @@ prep:
 	cp -R -u -p loginserver/login_util/* build/bin/assets/patches/
 	mkdir -p build/bin/assets
 	cp -R -u -p utils/patches build/bin/assets/
+	-unlink build/bin/lua_modules
 	cd build/bin && ln -s quests/lua_modules lua_modules
+	-unlink build/bin/mods
+	cd build/bin && ln -s quests/mods mods
+	-unlink build/bin/maps
+	cd build/bin && ln -s ../../base/maps maps
 	mkdir -p build/bin/logs
 	mkdir -p build/bin/shared
 	@echo "Eqemu is prepared"
+
+maps:
+	@echo "Downloading maps..."
+	@mkdir -p base/maps
+	@cd base/maps && wget -nc https://github.com/Akkadius/eqemu-maps/archive/refs/heads/master.zip
+	@cd base/maps && unzip -o master.zip
+	@cd base/maps && mv eqemu-maps-master/* .
+	@cd base/maps && rm -rf eqemu-maps-master
+	@echo "Maps downloaded."
 
 # Runs tests
 .PHONY: test

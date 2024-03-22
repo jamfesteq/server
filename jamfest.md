@@ -66,6 +66,12 @@ This is an alternative that is less integrated with VSCode, but works for just b
 1. When you first log in, the world console should say like "SetOnline Online Status [foo] (1) status [Online]
 1. You can run `make gm-foo` to update your status to 255, replacing foo with your name
 
+## Setup 9: Optional, get maps
+
+Maps are a big download so unless you care about navmesh, water, los testing, this can be skipped.
+
+1. Simply run `make maps`. This will download maps to base/maps, and the make prep command you ran earlier symlinks it.
+
 ## Debugging
 
 You can optionally debug by attaching via gdb to the running processes. This is only recommended if you are familiar with gdb and debugging in general

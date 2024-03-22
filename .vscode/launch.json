@@ -70,7 +70,7 @@
 			"program": "${workspaceFolder}/build/bin/zone",
 			"cwd": "${workspaceFolder}/build/bin",
 			"args": [
-				"ecommons",
+				"neriakb",
 			],
 			"MIMode": "gdb",
 			"setupCommands": [
