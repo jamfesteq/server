@@ -179,7 +179,7 @@ ifeq (,$(wildcard base/db/db.sql.zip))
 	@echo "base/db.sql.zip not found. Please download the database from https://www.eqemulator.org/downloads/downloads.php?do=file&id=1"
 	wget -nc https://db.projecteq.net/api/v1/dump/archive/peq-1710835223.zip -O base/db.sql.zip
 endif
-	-cd base/db && sudo service mariadb start && unzip -f db.sql.zip
+	-cd base/db && sudo service mariadb start && unzip db.sql.zip
 	@echo "Sourcing db may take a while, please wait..."
 	@cd base/db/peq-dump && sudo mariadb --database peq -e "source create_all_tables.sql"
 	@echo "MariaDB is now injected."
