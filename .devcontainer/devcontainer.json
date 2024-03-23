@@ -3,7 +3,7 @@
 {
 	"name": "eqemu",
 	"build": {
-		"dockerfile": "Dockerfile.ubuntu.dev"
+		"dockerfile": "Dockerfile.debian.dev"
 	},
 	"appPort": [
 		"5998:5998/udp",

@@ -1,5 +1,17 @@
 This is just self notes for how prod was configured.
 
+debian 12! (to mirror the dev container)
+
+## Configuration
+
+My dev box is called z420
+
+My prod box is aliased as jf
+
+I build binaries on the dev box and push them to prod when ready
+
+You'll need to set up these two destinations in /etc/hosts in linux with your ssh config properly aliasing to take full advantage of these instructions
+
 ## Inject DB
 
 Do each command one by one and ensure all is happy
@@ -9,9 +21,10 @@ sudo apt upgrade
 
 (optional, but suggested in case you lose session)
 screen
+sudo apt install -y mariadb-server unzip git liblua5.1-0 gdb libjson-perl libio-stringy-perl
 
-sudo apt install unzip mariadb-server
 sudo service mariadb start
+
 sudo mariadb -e 'DROP DATABASE IF EXISTS peq;'
 sudo mariadb -e 'CREATE DATABASE peq;'
 
@@ -35,19 +48,24 @@ sudo chown $USER -R /eqemu
 sudo chgrp $USER -R /eqemu
 
 (One time, for config copying)
-scp z420:/src/jamfesteq/server/base/eqemu_config.json 20.171.254.171:/eqemu
-(Edited config with WAN ip and various settings)
+scp z420:/src/jamfesteq/server/base/eqemu_config.json jf:/eqemu
+nano eqemu_config remotely
+- delete localaddress
+- change address to WAN
+- generate key
+- change longname
+- put in db password
 
 (One time, copy assets)
-ssh -t 20.171.254.171 "cd /eqemu && mkdir -p assets/patches"
-scp z420:/src/jamfesteq/server/loginserver/login_util/* 20.171.154.171:/eqemu/assets/patches
-scp z420:/src/jamfesteq/server/utils/patches/* 20.171.154.171:/eqemu/assets/patches
+ssh -t jf "cd /eqemu && mkdir -p assets/patches"
+scp z420:/src/jamfesteq/server/loginserver/login_util/* jf:/eqemu/assets/patches
+scp z420:/src/jamfesteq/server/utils/patches/* jf:/eqemu/assets/patches
 
 (One time, symlink)
-ssh -t 20.171.254.171 "cd /eqemu && ln -s quests/lua_modules lua_modules"
-ssh -t 20.171.254.171 "cd /eqemu && ln -s quests/mods mods"
-ssh -t 20.171.254.171 "cd /eqemu && mkdir -p logs"
-ssh -t 20.171.254.171 "cd /eqemu && mkdir -p shared"
+ssh -t jf "cd /eqemu && ln -s quests/lua_modules lua_modules"
+ssh -t jf "cd /eqemu && ln -s quests/mods mods"
+ssh -t jf "cd /eqemu && mkdir -p logs"
+ssh -t jf "cd /eqemu && mkdir -p shared"
 
 
 ## Copy binaries
@@ -63,12 +81,37 @@ ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip *.a"
 ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip queryserv"
 ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip ucs"
 
-ssh -t 20.171.254.171 "cd /eqemu && mv jamfesteq.zip jamfesteq.zip.old"
-scp z420:/src/jamfesteq/server/build/bin/jamfesteq.zip 20.171.254.171:/eqemu
-ssh -t 20.171.254.171 "cd /eqemu && unzip jamfesteq.zip"
+ssh -t jf "cd /eqemu && mv jamfesteq.zip jamfesteq.zip.old"
+scp z420:/src/jamfesteq/server/build/bin/jamfesteq.zip jf:/eqemu
+ssh -t jf "cd /eqemu && unzip jamfesteq.zip"
 ```
 
+## Initial run
+
+./shared_memory
+[Make a pat](https://github.com/settings/personal-access-tokens/new)
+- call it jamfesteq-prod-git
+- expiration: 01-01-2025 (next year)
+- resource owner, jamfesteq
+- only select repositories, jamfesteq/quests
+- repository permissions, contents, read only
+- add select repositories, jamfesteq/web
+- repository permissions, contents, read only
+- copy pat token
+git clone https://pattoken@github.com/jamfesteq/quests.git
+git clone https://pattoken@github.com/jamfesteq/web.git
+
+./zone
+see if success
+ctrl+a+c
+./world
+see if success
+log in
+sudo mariadb --database peq -e "UPDATE account SET status=255 WHERE name = 'xackery';"
+
 ## Docker setup (not used)
+
+This is more just self notes
 
 sudo apt-get update
 sudo apt-get install ca-certificates curl
