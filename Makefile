@@ -205,3 +205,8 @@ depends:
 	time python3 build/depends/dependency_graph.py -f png zone build/depends/zone.dot
 	@echo "Common..."
 	time python3 build/depends/dependency_graph.py -f png common build/depends/common.dot
+
+
+.PHONY: rule-inject
+rule-inject:
+	cd base/expansion && sudo mariadb --database peq -e "source rules.sql"

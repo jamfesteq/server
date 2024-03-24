@@ -47,7 +47,8 @@ sudo mkdir -p /eqemu
 sudo chown $USER -R /eqemu
 sudo chgrp $USER -R /eqemu
 
-(One time, for config copying)
+on local box:
+
 scp z420:/src/jamfesteq/server/base/eqemu_config.json jf:/eqemu
 nano eqemu_config remotely
 - delete localaddress
@@ -70,6 +71,7 @@ ssh -t jf "cd /eqemu && mkdir -p shared"
 
 ## Copy binaries
 
+on local box:
 Likely will be reused later for new binary copies
 
 ```
@@ -88,7 +90,23 @@ ssh -t jf "cd /eqemu && unzip jamfesteq.zip"
 
 ## Initial run
 
+on remote box in /eqemu:
+
 ./shared_memory
+
+./zone
+see if success
+ctrl+a+c
+./world
+see if success
+log in
+make yourself a gm
+sudo mariadb --database peq -e "UPDATE account SET status=255 WHERE name = 'xackery';"
+
+## Clone repos
+
+on remote box:
+
 [Make a pat](https://github.com/settings/personal-access-tokens/new)
 - call it jamfesteq-prod-git
 - expiration: 01-01-2025 (next year)
@@ -100,40 +118,68 @@ ssh -t jf "cd /eqemu && unzip jamfesteq.zip"
 - copy pat token
 git clone https://pattoken@github.com/jamfesteq/quests.git
 git clone https://pattoken@github.com/jamfesteq/web.git
+git clone https://github.com/Akkadius/eqemu-maps.git maps
 
-./zone
-see if success
-ctrl+a+c
-./world
-see if success
-log in
-sudo mariadb --database peq -e "UPDATE account SET status=255 WHERE name = 'xackery';"
+## Get binaries
 
-## Docker setup (not used)
+on remote in /eqemu:
 
-This is more just self notes
+### talkeq
+wget https://github.com/xackery/talkeq/releases/latest/download/talkeq-linux
+mv talkeq-linux talkeq
+chmod +x talkeq
+./talkeq
+nano talkeq
+- do lots of edits
 
-sudo apt-get update
-sudo apt-get install ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
+### githubeq
 
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt-get update
+wget https://github.com/xackery/githubeq/releases/latest/download/githubeq-linux
+mv githubeq-linux githubeq
+chmod +x githubeq
+./githubeq
+- generate a pat simialar to githubeq's instructions
+nano githubeq.conf
+- put pat, repo, user in conf
+./githubeq
+go in game and type #issue testing issues
+see if it generates an issue
 
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+### overseer
 
-sudo docker run hello-world
+wget https://github.com/xackery/overseer/releases/latest/download/overseer-linux.zip
+unzip overseer-linux.zip
+rm overseer-linux.zip update verify install diagnose
+./overseer
+- classic
+- no, no, no, no, 1
+ctrl+c exit overseer
+nano overseer.ini
+- bin_path = /eqemu/
+- server_path = /eqemu/
 
-sudo groupadd docker
+./overseer
+go in game and type #issue testing issues
+see if it generates an issue
 
-sudo usermod -aG docker $USER
+### webhook
 
-Now relog session
+wget https://github.com/xackery/webhook/releases/latest/download/webhook-linux -O webhook
+chmod +x webhook
+./webhook
+nano webhook.conf
+- change event1 to web
+	- copy paste webhook from discord
+	- create a webhook to server forwarding port 3000
 
-docker run hello-world
+### telleq
 
+wget https://github.com/xackery/telleq/releases/latest/download/telleq-linux -O telleq
+chmod +x telleq
+./telleq
+
+
+### yakuku
+
+wget https://github.com/xackery/yakuku/releases/latest/download/yakuku
+chmod +x yakuku
