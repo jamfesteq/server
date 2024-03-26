@@ -1,5 +1,10 @@
 # Classic Client-Based Expansion Setting
+UPDATE rule_values SET rule_value='0' WHERE rule_name='Expansion:CurrentExpansion';
 UPDATE rule_values SET rule_value='0' WHERE rule_name='World:ExpansionSettings';
+
+# this may need more testing with the spell file to ensure it cant be dispelled
+# UPDATE rule_values SET rule_value='true' WHERE rule_name='Character:UseOldRaceRezEffects';
+
 
 # Gear left on Corpses until post-OoW
 UPDATE rule_values SET rule_value='true' WHERE rule_name='Character:LeaveCorpses';
@@ -40,8 +45,6 @@ UPDATE rule_values SET rule_value='true' WHERE rule_name='Character:UseOldClassE
 UPDATE rule_values SET rule_value='true' WHERE rule_name='Character:UseOldConSystem';
 UPDATE rule_values SET rule_value='true' WHERE rule_name='Character:UseOldRaceExpPenalties';
 
-# this may need more testing with the spell file to ensure it cant be dispelled
-UPDATE rule_values SET rule_value='true' WHERE rule_name='Character:UseOldRaceRezEffects';
 
 UPDATE rule_values SET rule_value='true' WHERE rule_name='Character:UseRaceClassExpBonuses';
 

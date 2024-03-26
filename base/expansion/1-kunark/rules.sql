@@ -1,4 +1,5 @@
 # This adjusts rules for kunark expansion
+UPDATE rule_values SET rule_value='1' WHERE rule_name='Expansion:CurrentExpansion';
 
 # Kunark Client-Based Expansion Setting
 UPDATE rule_values SET rule_value='1' WHERE rule_name='World:ExpansionSettings';

@@ -1,4 +1,5 @@
 # This adjusts rules related to Legacy of ykesha
+UPDATE rule_values SET rule_value='5' WHERE rule_name='Expansion:CurrentExpansion';
 
 # Ykesha Client-Based Expansion Setting
 UPDATE rule_values SET rule_value='16' WHERE rule_name='World:ExpansionSettings';
