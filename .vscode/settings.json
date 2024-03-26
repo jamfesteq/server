@@ -5,7 +5,7 @@
 	"editor.autoIndent": "full",
 	"editor.trimAutoWhitespace": true,
 	"files.trimTrailingWhitespace": true,
-	"editor.formatOnSave": true,
+	//"editor.formatOnSave": true,
 	"search.exclude": {
 		"dependencies": false,
 	},
