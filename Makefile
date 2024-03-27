@@ -206,7 +206,12 @@ depends:
 	@echo "Common..."
 	time python3 build/depends/dependency_graph.py -f png common build/depends/common.dot
 
+inject-all:
+	make inject-aa
+	make inject-rule
 
-.PHONY: rule-inject
-rule-inject:
+inject-aa:
+	cd base/expansion && sudo mariadb --database peq -e "source aa.sql"
+
+inject-rule:
 	cd base/expansion && sudo mariadb --database peq -e "source rules.sql"

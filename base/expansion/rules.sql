@@ -21,6 +21,8 @@ source 0-classic/rules.sql;
 
 # Jamfest Overrides
 
+UPDATE rule_values SET rule_value='This is an early alpha of jamfest. Expect characters to be deleted.' WHERE rule_name='World:MOTD';
+
 # Gear left on Corpses
 UPDATE rule_values SET rule_value='false' WHERE rule_name='Character:LeaveCorpses';
 UPDATE rule_values SET rule_value='true' WHERE rule_name='Character:LeaveNakedCorpses';
