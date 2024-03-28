@@ -209,9 +209,13 @@ depends:
 inject-all:
 	make inject-aa
 	make inject-rule
+	make inject-zone
 
 inject-aa:
 	cd base/expansion && sudo mariadb --database peq -e "source aa.sql"
 
 inject-rule:
 	cd base/expansion && sudo mariadb --database peq -e "source rules.sql"
+
+inject-zone:
+	cd base/expansion && sudo mariadb --database peq -e "source zone.sql"

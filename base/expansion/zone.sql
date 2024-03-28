@@ -1,0 +1,1 @@
+UPDATE zone SET zone_exp_multiplier = '1.00';
