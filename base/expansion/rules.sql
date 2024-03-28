@@ -51,3 +51,4 @@ UPDATE rule_values SET rule_value='2' WHERE rule_name='Character:ShowExpValues';
 UPDATE rule_values SET rule_value='0' WHERE rule_name='Zone:HotZoneBonus';
 UPDATE rule_values SET rule_value='false' WHERE rule_name='Zone:LevelBasedEXPMods';
 UPDATE rule_values SET rule_value='true' WHERE rule_name='Combat:EXPFromDmgShield';
+UPDATE rule_values SET rule_value='true' WHERE rule_name='Character:HealOnLevel';
