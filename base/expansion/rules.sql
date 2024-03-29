@@ -57,3 +57,8 @@ UPDATE rule_values SET rule_value='false' WHERE rule_name='Combat:FleeGray';
 UPDATE rule_values SET rule_value='0' WHERE rule_name='Combat:FleeHPRatio';
 
 UPDATE rule_values SET rule_value='false' WHERE rule_name='Character:UnmemSpellsOnDeath';
+
+UPDATE rule_values SET rule_value='true' WHERE rule_name='Character:AllowMQTarget';
+
+UPDATE rule_values SET rule_value='true' WHERE rule_name='Spells:AlwaysSendTargetsBuffs';
+UPDATE rule_values SET rule_value='true' WHERE rule_name='Spells:UseSpellImpliedTargeting';
