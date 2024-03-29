@@ -210,6 +210,7 @@ inject-all:
 	make inject-aa
 	make inject-rule
 	make inject-zone
+	make inject-content-flags
 
 inject-aa:
 	cd base/expansion && sudo mariadb --database peq -e "source aa.sql"
@@ -219,3 +220,6 @@ inject-rule:
 
 inject-zone:
 	cd base/expansion && sudo mariadb --database peq -e "source zone.sql"
+
+inject-content-flags:
+	cd base/expansion && sudo mariadb --database peq -e "source content_flags.sql"
