@@ -627,7 +627,7 @@ void Client::SetEXP(uint64 set_exp, uint64 set_aaxp, bool isrezzexp) {
 			if (membercount > 1) {
 				if (RuleI(Character, ShowExpValues) > 0) {
 					Message(Chat::Experience, "You have gained %s party experience! %s", exp_amount_message.c_str(), exp_percent_message.c_str());
-				} else if (zone->IsHotzone()) { 
+				} else if (zone->IsHotzone()) {
 					Message(Chat::Experience, "You gain party experience (with a bonus)!");
 				} else {
 					MessageString(Chat::Experience, GAIN_GROUPXP);
@@ -635,7 +635,7 @@ void Client::SetEXP(uint64 set_exp, uint64 set_aaxp, bool isrezzexp) {
 			} else if (IsRaidGrouped()) {
 				if (RuleI(Character, ShowExpValues) > 0) {
 					Message(Chat::Experience, "You have gained %s raid experience! %s", exp_amount_message.c_str(), exp_percent_message.c_str());
-				} else if (zone->IsHotzone()) { 
+				} else if (zone->IsHotzone()) {
 					Message(Chat::Experience, "You gained raid experience (with a bonus)!");
 				} else {
 					MessageString(Chat::Experience, GAIN_RAIDEXP);
@@ -643,7 +643,7 @@ void Client::SetEXP(uint64 set_exp, uint64 set_aaxp, bool isrezzexp) {
 			} else {
 				if (RuleI(Character, ShowExpValues) > 0) {
 					Message(Chat::Experience, "You have gained %s experience! %s", exp_amount_message.c_str(), exp_percent_message.c_str());
-				} else if (zone->IsHotzone()) { 
+				} else if (zone->IsHotzone()) {
 					Message(Chat::Experience, "You gain experience (with a bonus)!");
 				} else {
 					MessageString(Chat::Experience, GAIN_XP);

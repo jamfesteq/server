@@ -1,7 +1,6 @@
 # This adjust rules for the Omens expansion
 UPDATE rule_values SET rule_value='8' WHERE rule_name='Expansion:CurrentExpansion';
-
-# Omens Client-Based Expansion Setting
+UPDATE rule_values SET rule_value='128' WHERE rule_name='World:CharacterSelectExpansionSettings';
 UPDATE rule_values SET rule_value='128' WHERE rule_name='World:ExpansionSettings';
 
 # Bard AE Nerf

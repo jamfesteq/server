@@ -1568,6 +1568,13 @@ uint32 LuaParser::GetEXPForLevel(Client *self, uint16 level, bool &ignoreDefault
 	return retval;
 }
 
+void LuaParser::RegisterBug(Client *self, BaseBugReportsRepository::BugReports bug, bool &ignore_default)
+{
+	for (auto &mod : mods_) {
+		mod.RegisterBug(self, bug, ignore_default);
+	}
+}
+
 uint64 LuaParser::GetExperienceForKill(Client *self, Mob *against, bool &ignoreDefault)
 {
 	uint64 retval = 0;

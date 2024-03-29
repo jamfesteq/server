@@ -1,6 +1,7 @@
 # Classic Client-Based Expansion Setting
 UPDATE rule_values SET rule_value='0' WHERE rule_name='Expansion:CurrentExpansion';
 UPDATE rule_values SET rule_value='0' WHERE rule_name='World:ExpansionSettings';
+UPDATE rule_values SET rule_value='0' WHERE rule_name='World:CharacterSelectExpansionSettings';
 
 # this may need more testing with the spell file to ensure it cant be dispelled
 # UPDATE rule_values SET rule_value='true' WHERE rule_name='Character:UseOldRaceRezEffects';

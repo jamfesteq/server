@@ -52,3 +52,8 @@ UPDATE rule_values SET rule_value='0' WHERE rule_name='Zone:HotZoneBonus';
 UPDATE rule_values SET rule_value='false' WHERE rule_name='Zone:LevelBasedEXPMods';
 UPDATE rule_values SET rule_value='true' WHERE rule_name='Combat:EXPFromDmgShield';
 UPDATE rule_values SET rule_value='true' WHERE rule_name='Character:HealOnLevel';
+
+UPDATE rule_values SET rule_value='false' WHERE rule_name='Combat:FleeGray';
+UPDATE rule_values SET rule_value='0' WHERE rule_name='Combat:FleeHPRatio';
+
+UPDATE rule_values SET rule_value='false' WHERE rule_name='Character:UnmemSpellsOnDeath';
