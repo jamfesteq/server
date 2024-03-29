@@ -62,3 +62,6 @@ UPDATE rule_values SET rule_value='true' WHERE rule_name='Character:AllowMQTarge
 
 UPDATE rule_values SET rule_value='true' WHERE rule_name='Spells:AlwaysSendTargetsBuffs';
 UPDATE rule_values SET rule_value='true' WHERE rule_name='Spells:UseSpellImpliedTargeting';
+
+UPDATE rule_values SET rule_value='12' WHERE rule_name='Character:RestRegenTimeToActivate';
+UPDATE rule_values SET rule_value='24' WHERE rule_name='Character:RestRegenRaidTimeToActivate';
