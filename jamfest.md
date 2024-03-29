@@ -10,7 +10,7 @@ This is recommended because you get autocomplete, debugging, and other features 
 1. Install the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension for VSCode
 1. Clone this repository
 1. Open the repository in VSCode
-1. Click on the green button in the bottom right corner of the window and select "Reopen in Container"
+1. Click on the green button in the bottom left corner of vscode and select "Reopen in Container"
 1. Wait for the container to build and start
 1. Open a terminal in VSCode (ctrl+~)
 1. Run `git submodule update --init --recursive` to pull in submodules
@@ -30,7 +30,7 @@ This is an alternative that is less integrated with VSCode, but works for just b
 ## Setup 2: Inject the database
 
 1. Open a terminal in VSCode (ctrl+~) or your preferred terminal
-1. Run `make inject-mariadb`
+1. Run `make inject-mariadb` to get a fresh peq snapshot from base
 1. If using setup 1.1 (dev container), run heidi or your preferred sql client to connect with the settings: 127.0.0.1:3306, peq, peq, peqpass. You should see all tables populated
 
 ## Setup 3: Clone quests
@@ -69,7 +69,8 @@ This is an alternative that is less integrated with VSCode, but works for just b
 ## Setup 9: Add expansion rules
 
 1. Open a new terminal in VSCode (ctrl+~) or your preferred terminal
-1. Run `make rule-inject`.
+1. Run `make inject-all`
+1. This applies zone, rules, aas.
 
 ## Setup 10: Optional, get maps
 

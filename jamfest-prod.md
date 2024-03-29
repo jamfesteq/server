@@ -68,6 +68,26 @@ ssh -t jf "cd /eqemu && ln -s quests/mods mods"
 ssh -t jf "cd /eqemu && mkdir -p logs"
 ssh -t jf "cd /eqemu && mkdir -p shared"
 
+## Clone repos
+
+on remote box:
+
+[Make a pat](https://github.com/settings/personal-access-tokens/new)
+- call it jamfesteq-prod-git
+- expiration: 01-01-2025 (next year)
+- resource owner, jamfesteq
+- only select repositories, jamfesteq/quests
+- repository permissions, contents, read only
+- add select repositories, jamfesteq/web
+- repository permissions, contents, read only
+- add select repositories, jamfesteq/server
+- copy pat token
+git clone https://pattoken@github.com/jamfesteq/quests.git
+git clone https://pattoken@github.com/jamfesteq/web.git
+git clone https://github.com/Akkadius/eqemu-maps.git maps
+git clone https://pattoken@github.com/jamfesteq/server.git
+- NOTE that while we do clone server, we are just using it for the sql tweaks
+
 
 ## Copy binaries
 
@@ -75,7 +95,7 @@ on local box:
 Likely will be reused later for new binary copies
 
 ```
-ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && rm jamfesteq.zip"
+ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && rm -f jamfesteq.zip"
 ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip zone"
 ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip world"
 ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip shared_memory"
@@ -87,6 +107,7 @@ ssh -t jf "cd /eqemu && mv jamfesteq.zip jamfesteq.zip.old"
 scp z420:/src/jamfesteq/server/build/bin/jamfesteq.zip jf:/eqemu
 ssh -t jf "cd /eqemu && unzip jamfesteq.zip"
 ```
+
 
 ## Initial run
 
@@ -102,27 +123,6 @@ see if success
 log in
 make yourself a gm
 sudo mariadb --database peq -e "UPDATE account SET status=255 WHERE name = 'xackery';"
-
-## Clone repos
-
-on remote box:
-
-[Make a pat](https://github.com/settings/personal-access-tokens/new)
-- call it jamfesteq-prod-git
-- expiration: 01-01-2025 (next year)
-- resource owner, jamfesteq
-- only select repositories, jamfesteq/quests
-- repository permissions, contents, read only
-- add select repositories, jamfesteq/web
-- repository permissions, contents, read only
-- copy pat token
-git clone https://pattoken@github.com/jamfesteq/quests.git
-git clone https://pattoken@github.com/jamfesteq/web.git
-git clone https://github.com/Akkadius/eqemu-maps.git maps
-
-## Get binaries
-
-on remote in /eqemu:
 
 ### talkeq
 wget https://github.com/xackery/talkeq/releases/latest/download/talkeq-linux
@@ -179,7 +179,3 @@ chmod +x telleq
 ./telleq
 
 
-### yakuku
-
-wget https://github.com/xackery/yakuku/releases/latest/download/yakuku
-chmod +x yakuku
