@@ -66,3 +66,6 @@ UPDATE rule_values SET rule_value='true' WHERE rule_name='Spells:UseSpellImplied
 UPDATE rule_values SET rule_value='12' WHERE rule_name='Character:RestRegenTimeToActivate';
 UPDATE rule_values SET rule_value='24' WHERE rule_name='Character:RestRegenRaidTimeToActivate';
 UPDATE rule_values SET rule_value='true' WHERE rule_name='HotReload:QuestsAutoReloadGlobalScripts';
+
+UPDATE rule_values SET rule_value='5' WHERE rule_name='NPC:OOCRegen';
+
