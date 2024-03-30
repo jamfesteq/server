@@ -357,6 +357,7 @@ RULE_INT(Zone, ForageChance, 25, "Chance of foraging from zone table vs global t
 RULE_BOOL(Zone, AllowCrossZoneSpellsOnBots, false, "Set to true to allow cross zone spells (cast/remove) to affect bots")
 RULE_BOOL(Zone, AllowCrossZoneSpellsOnMercs, false, "Set to true to allow cross zone spells (cast/remove) to affect mercenaries")
 RULE_BOOL(Zone, AllowCrossZoneSpellsOnPets, false, "Set to true to allow cross zone spells (cast/remove) to affect pets")
+RULE_BOOL(Zone, QuestsReloadOnBootup, false, "Reloads all quests when a non-static zone boots up")
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(Map)
