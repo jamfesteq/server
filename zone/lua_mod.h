@@ -29,6 +29,8 @@ public:
 	void GetExperienceForKill(Client *self, Mob *against, uint64 &returnValue, bool &ignoreDefault);
 	void CalcSpellEffectValue_formula(Mob *self, uint32 formula, int64 base_value, int64 max_value, int caster_level, uint16 spell_id, int ticsremaining, int64 &returnValue, bool &ignoreDefault);
 	void RegisterBug(Client *self, BaseBugReportsRepository::BugReports bug, bool &ignore_default);
+	void GetActSpellHealing(Mob *self, uint16 spell_id, int64 value, Mob* target, bool from_buff_tic, int64 &return_value, bool &ignore_default);
+	void GetActSpellDamage(Mob *self, uint16 spell_id, int64 value, Mob* target, int64 &return_value, bool &ignore_default);
 private:
 	LuaParser *parser_;
 	lua_State *L;
@@ -45,4 +47,6 @@ private:
 	bool m_has_get_experience_for_kill;
 	bool m_has_calc_spell_effect_value_formula;
 	bool m_has_register_bug;
+	bool m_has_get_act_spell_healing;
+	bool m_has_get_act_spell_damage;
 };
