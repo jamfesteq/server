@@ -297,7 +297,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					}
 					//handles custom situation where quest function mitigation put high enough to allow damage to heal.
 					else {
-						HealDamage(dmg, caster);
+						HealDamage(dmg, caster, spell_id);
 					}
 				}
 				else if(dmg > 0) {
@@ -306,7 +306,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					if(caster)
 						dmg = caster->GetActSpellHealing(spell_id, dmg, this);
 
-					HealDamage(dmg, caster);
+					HealDamage(dmg, caster, spell_id);
 				}
 
 #ifdef SPELL_EFFECT_SPAM
@@ -360,7 +360,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							dmg = -dmg;
 							Damage(caster, dmg, spell_id, spell.skill, false, buffslot, false);
 						} else {
-							HealDamage(dmg, caster);
+							HealDamage(dmg, caster, spell_id);
 						}
 						break;
 					}
@@ -385,7 +385,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							Damage(caster, dmg, spell_id, spell.skill, false, buffslot, false);
 						}
 						else {
-							HealDamage(dmg, caster);
+							HealDamage(dmg, caster, spell_id);
 						}
 					}
 					else if (dmg > 0) {
@@ -393,7 +393,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						if (caster && !IsEffectInSpell(spell_id, SE_TotalHP)) {
 							dmg = caster->GetActSpellHealing(spell_id, dmg, this);
 						}
-						HealDamage(dmg, caster);
+						HealDamage(dmg, caster, spell_id);
 					}
 				}
 				break;
@@ -429,7 +429,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				if (val < 0)
 					Damage(caster, -val, spell_id, spell.skill, false, buffslot, false);
 				else
-					HealDamage(val, caster);
+					HealDamage(val, caster, spell_id);
 
 				break;
 			}
@@ -444,7 +444,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					val = caster->GetActSpellHealing(spell_id, val, this);
 				}
 				if (val > 0) {
-					HealDamage(val, caster);
+					HealDamage(val, caster, spell_id);
 				}
 
 				break;
@@ -578,12 +578,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									GetPet()->BuffFadeByEffect(SE_Charm);
 								}
 							}
-							
+
 							CastToClient()->MovePC(zone->GetZoneID(), zone->GetInstanceID(), x, y, z, heading, 0, EvacToSafeCoords);
 						} else {
 							GMMove(x, y, z, heading);
 						}
-						
+
 						if (RuleB(Spells, EvacClearAggroInSameZone)) {
 							entity_list.ClearAggro(this);
 						}
@@ -1058,7 +1058,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							cd->hit_heading = action->hit_heading;
 
 							CastToClient()->QueuePacket(action_packet);
-							
+
 							if (caster->IsClient() && caster != this) {
 								caster->CastToClient()->QueuePacket(action_packet);
 							}
@@ -1068,7 +1068,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							if (caster->IsClient() && caster != this) {
 								caster->CastToClient()->QueuePacket(message_packet);
 							}
-							
+
 							CastToClient()->SetBindPoint(spells[spell_id].base_value[i] - 1);
 							Save();
 							safe_delete(action_packet);
@@ -1105,7 +1105,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					}
 					break;
 				}
-				
+
 				DispelMagic(caster, spell_id, effect_value);
 				break;
 			}
@@ -2505,7 +2505,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					//healing spell...
 					if(caster)
 						dmg = caster->GetActSpellHealing(spell_id, dmg, this);
-					HealDamage(dmg, caster);
+					HealDamage(dmg, caster, spell_id);
 				}
 #ifdef SPELL_EFFECT_SPAM
 				snprintf(effect_desc, _EDLEN, "Current Hitpoints: %+i  actual: %+i", effect_value, dmg);
@@ -2696,7 +2696,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					gid = r->GetGroup(caster->GetName());
 					if(gid < 11)
 					{
-						r->HealGroup(heal_amt,caster, gid, spell.range);
+						r->HealGroup(heal_amt,caster, gid, spell.id, spell.range);
 						break;
 					}
 				}
@@ -2704,11 +2704,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				Group *g = entity_list.GetGroupByClient(caster->CastToClient());
 
 				if(!g){
-					caster->HealDamage(heal_amt);
+					caster->HealDamage(heal_amt, caster, spell_id);
 					break;
 				}
 
-				g->HealGroup(heal_amt, caster, spell.range);
+				g->HealGroup(heal_amt, caster, spell_id, spell.range);
 				break;
 			}
 
@@ -2827,7 +2827,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						dmg = -dmg;
 						Damage(caster, dmg, spell_id, spell.skill, false, buffslot, false);
 					} else {
-						HealDamage(dmg, caster);
+						HealDamage(dmg, caster, spell_id);
 					}
 				}
 
@@ -2983,7 +2983,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						Damage(caster, amt, spell_id, spell.skill, false, buffslot, false);
 					}
 					else {
-						HealDamage(amt, caster);
+						HealDamage(amt, caster, spell_id);
 					}
 				}
 				break;
@@ -3971,7 +3971,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 				Damage(caster, effect_value, buff.spellid, spell.skill, false, i, true);
 			} else if (effect_value > 0) {
 				// healing spell...
-				HealDamage(effect_value, caster);
+				HealDamage(effect_value, caster, buff.spellid);
 				// healing aggro would go here; removed for now
 			}
 			break;
@@ -4162,7 +4162,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 				Damage(this, amt, 0, EQ::skills::SkillEvocation, false);
 			}
 			else {
-				HealDamage(amt);
+				HealDamage(amt, caster, buff.spellid);
 			}
 			break;
 		}
@@ -7369,7 +7369,7 @@ bool Mob::PassLimitClass(uint32 Classes_, uint16 Class_)
 	return false;
 }
 
-void Mob::DispelMagic(Mob* caster, uint16 spell_id, int effect_value) 
+void Mob::DispelMagic(Mob* caster, uint16 spell_id, int effect_value)
 {
 	for (int slot = 0; slot < GetMaxTotalSlots(); slot++) {
 		if (
@@ -9653,7 +9653,7 @@ void Mob::ResourceTap(int64 damage, uint16 spellid)
 
 				if (spells[spellid].limit_value[i] == 0) { // HP Tap
 					if (damage > 0)
-						HealDamage(damage);
+						HealDamage(damage, this, spellid);
 					else
 						Damage(this, -damage, 0, EQ::skills::SkillEvocation, false);
 				}

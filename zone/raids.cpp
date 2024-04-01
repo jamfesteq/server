@@ -713,7 +713,7 @@ uint32 Raid::GetTotalRaidDamage(Mob* other)
 	return total;
 }
 
-void Raid::HealGroup(uint32 heal_amt, Mob* caster, uint32 gid, float range)
+void Raid::HealGroup(uint32 heal_amt, Mob* caster, uint32 gid, uint16 spellid, float range)
 {
 	if (!caster) {
 		return;
@@ -743,8 +743,7 @@ void Raid::HealGroup(uint32 heal_amt, Mob* caster, uint32 gid, float range)
 			distance = DistanceSquared(caster->GetPosition(), m.member->GetPosition());
 
 			if (distance <= range2) {
-				m.member->SetHP(m.member->GetHP() + heal_amt);
-				m.member->SendHPUpdate();
+				m.member->HealDamage(m.member->GetHP() + heal_amt, caster, spellid);
 			}
 		}
 	}
@@ -2628,7 +2627,7 @@ void Raid::RaidClearNPCMarks(Client* c)
 		Strings::EqualFold(main_marker_pcs[MAIN_MARKER_3_SLOT], c->GetCleanName())) {
 		for (int i = 0; i < MAX_MARKED_NPCS; i++) {
 			if (marked_npcs[i].entity_id > 0 && marked_npcs[i].zone_id == c->GetZoneID()
-				&& marked_npcs[i].instance_id == c->GetInstanceID()) 
+				&& marked_npcs[i].instance_id == c->GetInstanceID())
 			{
 				auto npc_name = entity_list.GetNPCByID(marked_npcs[i].entity_id)->GetCleanName();
 				RaidMessageString(nullptr, Chat::Cyan, RAID_NO_LONGER_MARKED, npc_name);
@@ -2953,7 +2952,7 @@ void Raid::SendMarkTargets(Client* c)
 	}
 
 	for (int i = 0; i < MAX_MARKED_NPCS; i++) {
-		if (marked_npcs[i].entity_id > 0 && marked_npcs[i].zone_id == c->GetZoneID() 
+		if (marked_npcs[i].entity_id > 0 && marked_npcs[i].zone_id == c->GetZoneID()
 			&& marked_npcs[i].instance_id == c->GetInstanceID()) {
 			auto marked_mob = entity_list.GetMob(marked_npcs[i].entity_id);
 			if (marked_mob) {
@@ -2970,7 +2969,7 @@ void Raid::SendMarkTargets(Client* c)
 	UpdateXtargetMarkedNPC();
 }
 
-void Raid::EmptyRaidMembers() 
+void Raid::EmptyRaidMembers()
 {
 	for (int i = 0; i < MAX_RAID_MEMBERS; i++) {
 		members[i].group_number    = RAID_GROUPLESS;

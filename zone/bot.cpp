@@ -4409,7 +4409,7 @@ void Bot::Damage(Mob *from, int64 damage, uint16 spell_id, EQ::skills::SkillType
 	if (IsValidSpell(spell_id) && IsLifetapSpell(spell_id)) {
 		int64 healed = GetActSpellHealing(spell_id, damage);
 		LogCombatDetail("Applying lifetap heal of [{}] to [{}]", healed, GetCleanName());
-		HealDamage(healed);
+		HealDamage(healed, this, spell_id);
 		if (from) {
 			entity_list.FilteredMessageClose(this, true, RuleI(Range, SpellMessages), Chat::Emote, FilterSocials, "%s beams a smile at %s", GetCleanName(), from->GetCleanName());
 		}

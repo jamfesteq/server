@@ -1274,7 +1274,7 @@ void Client::LeaveGroup() {
 	isgrouped = false;
 }
 
-void Group::HealGroup(uint32 heal_amt, Mob* caster, float range)
+void Group::HealGroup(uint32 heal_amt, Mob* caster, uint16 spell_id, float range)
 {
 	if (!caster)
 		return;
@@ -1304,7 +1304,7 @@ void Group::HealGroup(uint32 heal_amt, Mob* caster, float range)
 		if(members[gi]){
 			distance = DistanceSquared(caster->GetPosition(), members[gi]->GetPosition());
 			if(distance <= range2){
-				members[gi]->HealDamage(heal_amt, caster);
+				members[gi]->HealDamage(heal_amt, caster, spell_id);
 				members[gi]->SendHPUpdate();
 			}
 		}

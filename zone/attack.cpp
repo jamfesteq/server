@@ -3331,7 +3331,7 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 	}
 	else if (DS > 0 && !spell_ds) {
 		//we are healing the attacker...
-		attacker->HealDamage(DS);
+		attacker->HealDamage(DS, attacker, (spellid != 0 ? spellid : 65535));
 		//TODO: send a packet???
 	}
 
@@ -4044,7 +4044,7 @@ void Mob::CommonDamage(Mob* attacker, int64 &damage, const uint16 spell_id, cons
 
 				healed = RuleB(Spells, CompoundLifetapHeals) ? attacker->GetActSpellHealing(spell_id, healed) : healed;
 				LogCombat("Applying lifetap heal of [{}] to [{}]", healed, attacker->GetName());
-				attacker->HealDamage(healed);
+				attacker->HealDamage(healed, attacker, spell_id);
 
 				//we used to do a message to the client, but its gone now.
 				// emote goes with every one ... even npcs
