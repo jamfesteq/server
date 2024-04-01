@@ -137,6 +137,7 @@ nano talkeq
 wget https://github.com/xackery/githubeq/releases/latest/download/githubeq-linux
 mv githubeq-linux githubeq
 chmod +x githubeq
+killall githubeq
 ./githubeq
 - generate a pat simialar to githubeq's instructions
 nano githubeq.conf
@@ -177,5 +178,13 @@ nano webhook.conf
 wget https://github.com/xackery/telleq/releases/latest/download/telleq-linux -O telleq
 chmod +x telleq
 ./telleq
+
+### Bumping Expansions
+
+- Go to base/expansion/ and edit every .sql file.
+- On the top of each file, you'll see a source 0-foo/ for each expansion. Uncomment each one applicable.
+- Run `make inject-all`
+
+- Go to eqemupatcher and edit the Makefile, changing the expansion variable to your new expansion value.
 
 
