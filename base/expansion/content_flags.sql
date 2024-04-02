@@ -1,7 +1,7 @@
 source 0-classic/content_flags.sql;
 source 1-kunark/content_flags.sql;
 source 2-velious/content_flags.sql;
-#source 3-luclin/content_flags.sql;
+source 3-luclin/content_flags.sql;
 #source 4-pop/content_flags.sql;
 #source 5-loy/content_flags.sql;
 #source 6-ldon/content_flags.sql;

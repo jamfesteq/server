@@ -1,7 +1,7 @@
 source 0-classic/rules.sql;
 source 1-kunark/rules.sql;
 source 2-velious/rules.sql;
-#source 3-luclin/rules.sql;
+source 3-luclin/rules.sql;
 #source 4-pop/rules.sql;
 #source 5-loy/rules.sql;
 #source 6-ldon/rules.sql;
