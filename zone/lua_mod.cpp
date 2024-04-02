@@ -43,6 +43,8 @@ void LuaMod::Init()
 	m_has_common_damage = parser_->HasFunction("CommonDamage", package_name_);
 	m_has_heal_damage = parser_->HasFunction("HealDamage", package_name_);
 	m_has_resist_spell_roll = parser_->HasFunction("ResistSpellRoll", package_name_);
+	m_has_set_exp = parser_->HasFunction("SetEXP", package_name_);
+	m_has_set_aa_exp = parser_->HasFunction("SetAAEXP", package_name_);
 }
 
 void PutDamageHitInfo(lua_State *L, luabind::adl::object &e, DamageHitInfo &hit) {
@@ -1037,5 +1039,114 @@ void LuaMod::ResistSpellRoll(Mob *self, Mob* caster, int roll, int roll_max, int
 		lua_pop(L, n);
 	}
 }
+
+
+void LuaMod::SetEXP(Mob *self, ExpSource exp_source, uint64 current_exp, uint64 set_exp, bool is_rezz_exp, uint64 &return_value, bool &ignore_default)
+{
+	int start = lua_gettop(L);
+
+	try {
+		if (!m_has_set_exp) {
+			return;
+		}
+
+		lua_getfield(L, LUA_REGISTRYINDEX, package_name_.c_str());
+		lua_getfield(L, -1, "SetEXP");
+
+		Lua_Mob l_self(self);
+		luabind::adl::object e = luabind::newtable(L);
+		e["self"] = l_self;
+		e["exp_source"] = exp_source;
+		e["current_exp"] = current_exp;
+		e["set_exp"] = set_exp;
+		e["is_rezz_exp"] = is_rezz_exp;
+
+		e.push(L);
+
+		if (lua_pcall(L, 1, 1, 0)) {
+			std::string error = lua_tostring(L, -1);
+			parser_->AddError(error);
+			lua_pop(L, 2);
+			return;
+		}
+
+		if (lua_type(L, -1) == LUA_TTABLE) {
+			luabind::adl::object ret(luabind::from_stack(L, -1));
+			auto ignore_default_obj = ret["ignore_default"];
+			if (luabind::type(ignore_default_obj) == LUA_TBOOLEAN) {
+				ignore_default = ignore_default || luabind::object_cast<bool>(ignore_default_obj);
+			}
+
+			auto return_value_obj = ret["return_value"];
+			if (luabind::type(return_value_obj) == LUA_TNUMBER) {
+				return_value = luabind::object_cast<int64>(return_value_obj);
+			}
+		}
+	}
+	catch (std::exception &ex) {
+		parser_->AddError(ex.what());
+	}
+
+	int end = lua_gettop(L);
+	int n = end - start;
+	if (n > 0) {
+		lua_pop(L, n);
+	}
+}
+
+void LuaMod::SetAAEXP(Mob *self, ExpSource exp_source, uint64 current_aa_exp, uint64 set_aa_exp, bool is_rezz_exp, uint64 &return_value, bool &ignore_default)
+{
+	int start = lua_gettop(L);
+
+	try {
+		if (!m_has_set_aa_exp) {
+			return;
+		}
+
+		lua_getfield(L, LUA_REGISTRYINDEX, package_name_.c_str());
+		lua_getfield(L, -1, "SetAAExp");
+
+		Lua_Mob l_self(self);
+		luabind::adl::object e = luabind::newtable(L);
+		e["self"] = l_self;
+		e["exp_source"] = exp_source;
+		e["current_aa_exp"] = current_aa_exp;
+		e["set_aa_exp"] = set_aa_exp;
+		e["is_rezz_exp"] = is_rezz_exp;
+
+		e.push(L);
+
+		if (lua_pcall(L, 1, 1, 0)) {
+			std::string error = lua_tostring(L, -1);
+			parser_->AddError(error);
+			lua_pop(L, 2);
+			return;
+		}
+
+		if (lua_type(L, -1) == LUA_TTABLE) {
+			luabind::adl::object ret(luabind::from_stack(L, -1));
+			auto ignore_default_obj = ret["ignore_default"];
+			if (luabind::type(ignore_default_obj) == LUA_TBOOLEAN) {
+				ignore_default = ignore_default || luabind::object_cast<bool>(ignore_default_obj);
+			}
+
+			auto return_value_obj = ret["return_value"];
+			if (luabind::type(return_value_obj) == LUA_TNUMBER) {
+				return_value = luabind::object_cast<int64>(return_value_obj);
+			}
+		}
+	}
+	catch (std::exception &ex) {
+		parser_->AddError(ex.what());
+	}
+
+	int end = lua_gettop(L);
+	int n = end - start;
+	if (n > 0) {
+		lua_pop(L, n);
+	}
+}
+
+
 
 #endif

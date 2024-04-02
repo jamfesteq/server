@@ -1306,7 +1306,8 @@ void LuaParser::MapFunctions(lua_State *L) {
 			lua_register_journal_mode(),
 			lua_register_expedition(),
 			lua_register_expedition_lock_messages(),
-			lua_register_buff()
+			lua_register_buff(),
+			lua_register_exp_source()
 		)];
 
 	} catch(std::exception &ex) {
@@ -1636,6 +1637,24 @@ int LuaParser::ResistSpellRoll(Mob *self, Mob* caster, int roll, int roll_max, i
 	int retval = 0;
 	for (auto &mod : mods_) {
 		mod.ResistSpellRoll(self, caster, roll, roll_max, resist_chance, resist_type, spell_id, use_resist_override, resist_override, is_charisma_check, is_charm_tick, is_root, level_override, resist_modifier, retval, ignore_default);
+	}
+	return retval;
+}
+
+uint64 LuaParser::SetEXP(Mob *self, ExpSource exp_source, uint64 current_exp, uint64 set_exp, bool is_rezz_exp, bool &ignore_default)
+{
+	uint64 retval = 0;
+	for (auto &mod : mods_) {
+		mod.SetEXP(self, exp_source, current_exp, set_exp, is_rezz_exp, retval, ignore_default);
+	}
+	return retval;
+}
+
+uint64 LuaParser::SetAAEXP(Mob *self, ExpSource exp_source, uint64 current_aa_exp, uint64 set_aa_exp, bool is_rezz_exp, bool &ignore_default)
+{
+	uint64 retval = 0;
+	for (auto &mod : mods_) {
+		mod.SetAAEXP(self, exp_source, current_aa_exp, set_aa_exp, is_rezz_exp, retval, ignore_default);
 	}
 	return retval;
 }
