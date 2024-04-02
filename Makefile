@@ -45,7 +45,7 @@ docker-build: docker-image-build
 # Build image if it doesn't exist
 docker-image-build:
 	@echo "Docker image not found. Building..."
-	cd .devcontainer && docker build -f Dockerfile.ubuntu.dev -t ${NAME} .
+	cd .devcontainer && docker build -f Dockerfile.debian.dev -t ${NAME} .
 
 docker-clean: clean
 
