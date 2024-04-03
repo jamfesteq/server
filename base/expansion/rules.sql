@@ -76,3 +76,6 @@ Update rule_values SET rule_value='false' WHERE rule_name='Spells:NPCSpellPush';
 
 UPDATE rule_values SET rule_value='1.0' WHERE rule_name='Character:AAExpMultiplier';
 UPDATE rule_values SET rule_value='1.0' WHERE rule_name='Character:ExpMultiplier';
+
+
+UPDATE rule_values SET rule_value='0' WHERE rule_name='NPC:StartEnrageValue';

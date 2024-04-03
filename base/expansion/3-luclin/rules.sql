@@ -5,4 +5,3 @@ UPDATE rule_values SET rule_value='7' WHERE rule_name='World:CharacterSelectExpa
 
 # Wizard Innate Criticals
 UPDATE rule_values SET rule_value='12' WHERE rule_name='Spells:WizCritLevel';
-UPDATE rule_values SET rule_value='0' WHERE rule_name='NPC:StartEnrageValue';
