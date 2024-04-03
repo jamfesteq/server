@@ -62,6 +62,7 @@ OS := $(shell uname -s)
 .PHONY: prep
 prep:
 	@echo "Preparing build/bin for usage..."
+	mkdir -p build/bin/assets/patches
 	cp -R -u -p base/eqemu_config.json build/bin/eqemu_config.json
 	cp -R -u -p base/login.json build/bin/login.json
 	cp -R -u -p loginserver/login_util/* build/bin/assets/patches/
@@ -75,7 +76,7 @@ prep:
 	cd build/bin && ln -s ../../base/maps maps
 	mkdir -p build/bin/logs
 	mkdir -p build/bin/shared
-	@echo "Eqemu is prepared"
+	@echo "Eqemu is prepared. Edit build/bin/eqemu_config.json to configure."
 
 maps:
 	@echo "Downloading maps..."
