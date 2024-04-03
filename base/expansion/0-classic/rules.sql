@@ -63,3 +63,6 @@ UPDATE rule_values SET rule_value='false' WHERE rule_name='World:EnableReturnHom
 
 # Tutorial Not added until DoN
 UPDATE rule_values SET rule_value='false' WHERE rule_name='World:EnableTutorialButton';
+
+# Disable front backstab
+UPDATE rule_values SET rule_value='true' WHERE rule_name='Combat:ClassicNPCBackstab';
