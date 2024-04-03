@@ -4,7 +4,7 @@ debian 12! (to mirror the dev container)
 
 ## Configuration
 
-My dev box is called z420
+My dev box is called mint-stick
 
 My prod box is aliased as jf
 
@@ -49,7 +49,7 @@ sudo chgrp $USER -R /eqemu
 
 on local box:
 
-scp z420:/src/jamfesteq/server/base/eqemu_config.json jf:/eqemu
+scp mint-stick:/src/jamfesteq/server/base/eqemu_config.json jf:/eqemu
 nano eqemu_config remotely
 - delete localaddress
 - change address to WAN
@@ -59,8 +59,8 @@ nano eqemu_config remotely
 
 (One time, copy assets)
 ssh -t jf "cd /eqemu && mkdir -p assets/patches"
-scp z420:/src/jamfesteq/server/loginserver/login_util/* jf:/eqemu/assets/patches
-scp z420:/src/jamfesteq/server/utils/patches/* jf:/eqemu/assets/patches
+scp mint-stick:/src/jamfesteq/server/loginserver/login_util/* jf:/eqemu/assets/patches
+scp mint-stick:/src/jamfesteq/server/utils/patches/* jf:/eqemu/assets/patches
 
 (One time, symlink)
 ssh -t jf "cd /eqemu && ln -s quests/lua_modules lua_modules"
@@ -95,15 +95,15 @@ on local box:
 Likely will be reused later for new binary copies
 
 ```sh
-ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && rm -f jamfesteq.zip"
-ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip zone"
-ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip world"
-ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip shared_memory"
-ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip *.a"
-ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip queryserv"
-ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip ucs"
+ssh -t mint-stick "cd /src/jamfesteq/server/build/bin/ && rm -f jamfesteq.zip"
+ssh -t mint-stick "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip zone"
+ssh -t mint-stick "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip world"
+ssh -t mint-stick "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip shared_memory"
+ssh -t mint-stick "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip *.a"
+ssh -t mint-stick "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip queryserv"
+ssh -t mint-stick "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip ucs"
 ssh -t jf "cd /eqemu && mv jamfesteq.zip jamfesteq.zip.old"
-scp z420:/src/jamfesteq/server/build/bin/jamfesteq.zip jf:/eqemu
+scp mint-stick:/src/jamfesteq/server/build/bin/jamfesteq.zip jf:/eqemu
 ```
 
 ssh -t jf "cd /eqemu && unzip jamfesteq.zip"
