@@ -206,7 +206,7 @@ public:
 	int ResistSpellRoll(Mob *self, Mob* caster, int roll, int roll_max, int resist_chance, uint8 resist_type, uint16 spell_id, bool use_resist_override, int resist_override, bool is_charisma_check, bool is_charm_tick, bool is_root, int level_override, int resist_modifier, bool &ignore_default);
 	uint64 SetEXP(Mob *self, ExpSource exp_source, uint64 current_exp, uint64 set_exp, bool is_rezz_exp, bool &ignore_default);
 	uint64 SetAAEXP(Mob *self, ExpSource exp_source, uint64 current_aa_exp, uint64 set_aa_exp, bool is_rezz_exp, bool &ignore_default);
-
+	int32 UpdatePersonalFaction(Mob *self, int32 npc_value, int32 faction_id, int32 current_value, int32 temp, int32 this_faction_min, int32 this_faction_max, bool &ignore_default);
 private:
 	LuaParser();
 	LuaParser(const LuaParser&);

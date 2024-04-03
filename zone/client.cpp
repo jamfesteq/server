@@ -7540,6 +7540,16 @@ void Client::SetFactionLevel(
 		current_value = GetCharacterFactionLevel(e.faction_id);
 		faction_before = current_value;
 
+#ifdef LUA_EQEMU
+	int32 lua_ret = 0;
+	bool ignore_default = false;
+	lua_ret = LuaParser::Instance()->UpdatePersonalFaction(this, e.value, e.faction_id, current_value, e.temp, faction_minimum, faction_maximum, ignore_default);
+
+	if (ignore_default) {
+		e.value = lua_ret;
+	}
+#endif
+
 		UpdatePersonalFaction(
 			character_id,
 			e.value,
@@ -7595,6 +7605,15 @@ void Client::SetFactionLevel2(uint32 char_id, int32 faction_id, uint8 char_class
 		current_value = GetCharacterFactionLevel(faction_id);
 		faction_before_hit = current_value;
 
+#ifdef LUA_EQEMU
+	int32 lua_ret = 0;
+	bool ignore_default = false;
+	lua_ret = LuaParser::Instance()->UpdatePersonalFaction(this, value, faction_id, current_value, temp, this_faction_min, this_faction_max, ignore_default);
+
+	if (ignore_default) {
+		value = lua_ret;
+	}
+#endif
 		UpdatePersonalFaction(char_id, value, faction_id, &current_value, temp, this_faction_min, this_faction_max);
 
 		//Message(Chat::Lime, "Min(%d) Max(%d) Before(%d), After(%d)\n", this_faction_min, this_faction_max, faction_before_hit, current_value);
@@ -7623,6 +7642,7 @@ int32 Client::GetCharacterFactionLevel(int32 faction_id)
 
 void Client::UpdatePersonalFaction(int32 char_id, int32 npc_value, int32 faction_id, int32 *current_value, int32 temp, int32 this_faction_min, int32 this_faction_max)
 {
+
 	bool repair = false;
 	bool change = false;
 
@@ -7639,7 +7659,6 @@ void Client::UpdatePersonalFaction(int32 char_id, int32 npc_value, int32 faction
 				npc_value *= 2;
 		}
 	}
-
 	// Set flag when to update db
 	// Repair needed, as db changes could modify a base value for a faction
 	// and we need to auto correct when that happens.

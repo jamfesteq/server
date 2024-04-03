@@ -1659,6 +1659,15 @@ uint64 LuaParser::SetAAEXP(Mob *self, ExpSource exp_source, uint64 current_aa_ex
 	return retval;
 }
 
+int32 LuaParser::UpdatePersonalFaction(Mob *self, int32 npc_value, int32 faction_id, int32 current_value, int32 temp, int32 this_faction_min, int32 this_faction_max, bool &ignore_default)
+{
+	int32 retval = 0;
+	for (auto &mod : mods_) {
+		mod.UpdatePersonalFaction(self, npc_value, faction_id, current_value, temp, this_faction_min, this_faction_max, retval, ignore_default);
+	}
+	return retval;
+}
+
 int LuaParser::EventBot(
 	QuestEventID evt,
 	Bot *bot,
