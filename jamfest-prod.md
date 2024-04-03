@@ -94,7 +94,7 @@ git clone https://pattoken@github.com/jamfesteq/server.git
 on local box:
 Likely will be reused later for new binary copies
 
-```
+```sh
 ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && rm -f jamfesteq.zip"
 ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip zone"
 ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip world"
@@ -102,11 +102,11 @@ ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip shared_
 ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip *.a"
 ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip queryserv"
 ssh -t z420 "cd /src/jamfesteq/server/build/bin/ && zip -r jamfesteq.zip ucs"
-
 ssh -t jf "cd /eqemu && mv jamfesteq.zip jamfesteq.zip.old"
 scp z420:/src/jamfesteq/server/build/bin/jamfesteq.zip jf:/eqemu
-ssh -t jf "cd /eqemu && unzip jamfesteq.zip"
 ```
+
+ssh -t jf "cd /eqemu && unzip jamfesteq.zip"
 
 
 ## Initial run
