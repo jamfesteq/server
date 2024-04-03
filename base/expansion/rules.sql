@@ -73,3 +73,6 @@ UPDATE rule_values SET rule_value='true' WHERE rule_name='Zone:QuestsReloadOnBoo
 
 Update rule_values SET rule_value='false' WHERE rule_name='Combat:MeleePush';
 Update rule_values SET rule_value='false' WHERE rule_name='Spells:NPCSpellPush';
+
+UPDATE rule_values SET rule_value='1.0' WHERE rule_name='Character:AAExpMultiplier';
+UPDATE rule_values SET rule_value='1.0' WHERE rule_name='Character:ExpMultiplier';
