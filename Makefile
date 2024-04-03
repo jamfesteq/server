@@ -170,14 +170,14 @@ init-mariadb:
 .PHONY: inject-mariadb
 inject-mariadb:
 	-sudo service mariadb start
-	-mkdir -p base
+	-mkdir -p base/db/
 	-sudo mariadb -e 'DROP DATABASE IF EXISTS peq;'
 	-sudo mariadb -e 'CREATE DATABASE peq;'
 	-sudo mariadb -e "CREATE USER 'peq'@'127.0.0.1' IDENTIFIED BY 'peqpass';"
 	-sudo mariadb -e "GRANT ALL PRIVILEGES ON *.* TO 'peq'@'127.0.0.1';"
 ifeq (,$(wildcard base/db/db.sql.zip))
 	@echo "base/db.sql.zip not found. Please download the database from https://www.eqemulator.org/downloads/downloads.php?do=file&id=1"
-	wget -nc https://db.projecteq.net/api/v1/dump/archive/peq-1710835223.zip -O base/db.sql.zip
+	wget -nc https://db.projecteq.net/api/v1/dump/archive/peq-1710835223.zip -O base/db/db.sql.zip
 endif
 	-cd base/db && sudo service mariadb start && unzip db.sql.zip
 	@echo "Sourcing db may take a while, please wait..."
