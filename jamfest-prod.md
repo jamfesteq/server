@@ -179,6 +179,12 @@ wget https://github.com/xackery/telleq/releases/latest/download/telleq-linux -O 
 chmod +x telleq
 ./telleq
 
+### tinywebeq
+
+wget https://github.com/xackery/tinywebeq/releases/latest/download/tinywebeq-linux -O tinywebeq
+chmod +x tinywebeq
+./tinywebeq
+
 ### Bumping Expansions
 
 - Go to base/expansion/ and edit every .sql file.

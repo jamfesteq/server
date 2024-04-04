@@ -2,7 +2,7 @@ source 0-classic/rules.sql;
 source 1-kunark/rules.sql;
 source 2-velious/rules.sql;
 source 3-luclin/rules.sql;
-#source 4-pop/rules.sql;
+source 4-pop/rules.sql;
 #source 5-loy/rules.sql;
 #source 6-ldon/rules.sql;
 #source 7-god/rules.sql;
@@ -21,7 +21,7 @@ source 3-luclin/rules.sql;
 
 # Jamfest Overrides
 
-UPDATE rule_values SET rule_value='This is an early alpha of jamfest. Currently on Luclin, #opt in to cool commands to speed things up. Check out https://jamfesteq.com for patcher and intro. Expect characters to be deleted for beta.' WHERE rule_name='World:MOTD';
+UPDATE rule_values SET rule_value='This is an early alpha of jamfest. Currently on Planes of Power, #opt in to cool commands to speed things up. Check out https://jamfesteq.com for patcher and intro. Expect characters to be deleted for beta. Guildmasters are handy, hail them.' WHERE rule_name='World:MOTD';
 
 # Gear left on Corpses
 UPDATE rule_values SET rule_value='false' WHERE rule_name='Character:LeaveCorpses';

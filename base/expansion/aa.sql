@@ -2,7 +2,7 @@ source 0-classic/aa.sql;
 source 1-kunark/aa.sql;
 source 2-velious/aa.sql;
 source 3-luclin/aa.sql;
-#source 4-pop/aa.sql;
+source 4-pop/aa.sql;
 #source 5-loy/aa.sql;
 #source 6-ldon/aa.sql;
 #source 7-god/aa.sql;
