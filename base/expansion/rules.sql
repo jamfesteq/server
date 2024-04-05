@@ -79,3 +79,5 @@ UPDATE rule_values SET rule_value='1.0' WHERE rule_name='Character:ExpMultiplier
 
 
 UPDATE rule_values SET rule_value='0' WHERE rule_name='NPC:StartEnrageValue';
+
+UPDATE rule_values SET rule_value='0' WHERE rule_name='Adventure:MinNumberForGroup';
