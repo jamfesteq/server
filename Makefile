@@ -212,7 +212,7 @@ inject-all:
 	make inject-rule
 	make inject-zone
 	make inject-content-flags
-	make inject-npc-types
+	@#make inject-npc-types
 
 inject-aa:
 	cd base/expansion && sudo mariadb --database peq -e "source aa.sql"
