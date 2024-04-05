@@ -21,7 +21,7 @@ source 6-ldon/rules.sql;
 
 # Jamfest Overrides
 
-UPDATE rule_values SET rule_value='This is an early alpha of jamfest. Currently on Planes of Power, #opt in to cool commands to speed things up. Check out https://jamfesteq.com for patcher and intro. Expect characters to be deleted for beta. Guildmasters are handy, hail them.' WHERE rule_name='World:MOTD';
+UPDATE rule_values SET rule_value='This is an early alpha of jamfest. Currently on Lost Dungeons of Norrath, #opt in to cool commands to speed things up. Check out https://jamfesteq.com for patcher and intro. Expect characters to be deleted for beta. Guildmasters are handy, hail them.' WHERE rule_name='World:MOTD';
 
 # Gear left on Corpses
 UPDATE rule_values SET rule_value='false' WHERE rule_name='Character:LeaveCorpses';
