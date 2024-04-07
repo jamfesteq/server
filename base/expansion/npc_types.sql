@@ -5,3 +5,5 @@ UPDATE spawn2 SET min_expansion = 0 WHERE spawngroupid = 148650;
 UPDATE spawn2 SET min_expansion = 0 WHERE spawngroupid = 110163;
 
 UPDATE global_loot SET min_expansion = 0 WHERE id IN (1,2,3,4,5,6,7,8);
+
+UPDATE loottable_entries SET multiplier = 5, probability = 10 WHERE loottable_id IN (110209, 110210, 110211, 110212, 110213, 110214, 110215, 110216);
