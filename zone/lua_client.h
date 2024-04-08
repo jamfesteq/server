@@ -573,6 +573,8 @@ public:
 
 	void DialogueWindow(std::string markdown);
 
+	void SendAppearancePacket(uint32 appearance_type, uint32 appearance_id);
+
 	bool ReloadDataBuckets();
 
 	Lua_Expedition  CreateExpedition(luabind::object expedition_info);

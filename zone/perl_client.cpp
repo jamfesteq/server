@@ -1758,6 +1758,11 @@ int Perl_Client_GetClientMaxLevel(Client* self)
 	return self->GetClientMaxLevel();
 }
 
+void Perl_Client_SendAppearancePacket(Client* self, uint32 appearance_type, uint32 appearance_id)
+{
+	self->SendAppearancePacket(appearance_type, appearance_id);
+}
+
 DynamicZoneLocation GetDynamicZoneLocationFromHash(perl::hash table)
 {
 	// dynamic zone helper method, defaults invalid/missing keys to 0
@@ -3539,6 +3544,7 @@ void perl_register_client()
 	package.add("ScribeSpell", (void(*)(Client*, uint16, int, bool))&Perl_Client_ScribeSpell);
 	package.add("ScribeSpells", &Perl_Client_ScribeSpells);
 	package.add("SendColoredText", &Perl_Client_SendColoredText);
+	package.add("SendAppearancePacket", &Perl_Client_SendAppearancePacket);
 	package.add("SendGMCommand", (bool(*)(Client*, std::string))&Perl_Client_SendGMCommand);
 	package.add("SendGMCommand", (bool(*)(Client*, std::string, bool))&Perl_Client_SendGMCommand);
 	package.add("SendMarqueeMessage", (void(*)(Client*, uint32, std::string))&Perl_Client_SendMarqueeMessage);
@@ -3566,6 +3572,7 @@ void perl_register_client()
 	package.add("SetAccountFlag", &Perl_Client_SetAccountFlag);
 	package.add("SetAlternateCurrencyValue", &Perl_Client_SetAlternateCurrencyValue);
 	package.add("SetAnon", &Perl_Client_SetAnon);
+	package.add("SendAppearancePacket", &Perl_Client_SendAppearancePacket);
 	package.add("SetBaseClass", &Perl_Client_SetBaseClass);
 	package.add("SetBaseGender", &Perl_Client_SetBaseGender);
 	package.add("SetBaseRace", &Perl_Client_SetBaseRace);

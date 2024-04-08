@@ -3324,6 +3324,12 @@ luabind::object Lua_Client::GetRaidOrGroupOrSelf(lua_State* L)
 	return t;
 }
 
+
+void Lua_Client::SendAppearancePacket(uint32 appearance_type, uint32 appearance_id) {
+	Lua_Safe_Call_Void();
+	self->SendAppearancePacket(appearance_type, appearance_id);
+}
+
 luabind::object Lua_Client::GetRaidOrGroupOrSelf(lua_State* L, bool clients_only)
 {
 	auto t = luabind::newtable(L);
@@ -3741,6 +3747,7 @@ luabind::scope lua_register_client() {
 	.def("ScribeSpell", (void(Lua_Client::*)(int,int))&Lua_Client::ScribeSpell)
 	.def("ScribeSpell", (void(Lua_Client::*)(int,int,bool))&Lua_Client::ScribeSpell)
 	.def("ScribeSpells", (uint16(Lua_Client::*)(uint8,uint8))&Lua_Client::ScribeSpells)
+	.def("SendAppearancePacket", (void(Lua_Client::*)(int,int))&Lua_Client::SendAppearancePacket)
 	.def("SendColoredText", (void(Lua_Client::*)(uint32, std::string))&Lua_Client::SendColoredText)
 	.def("SendItemScale", (void(Lua_Client::*)(Lua_ItemInst))&Lua_Client::SendItemScale)
 	.def("SendGMCommand", (bool(Lua_Client::*)(std::string))&Lua_Client::SendGMCommand)
