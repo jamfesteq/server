@@ -7,7 +7,7 @@ source 5-loy/aa.sql;
 source 6-ldon/aa.sql;
 source 7-god/aa.sql;
 source 8-oow/aa.sql;
-#source 9-don/aa.sql;
+source 9-don/aa.sql;
 #source 10-dodh/aa.sql;
 #source 11-por/aa.sql;
 #source 12-tss/aa.sql;
