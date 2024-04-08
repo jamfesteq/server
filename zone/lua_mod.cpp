@@ -46,6 +46,7 @@ void LuaMod::Init()
 	m_has_set_exp = parser_->HasFunction("SetEXP", package_name_);
 	m_has_set_aa_exp = parser_->HasFunction("SetAAEXP", package_name_);
 	m_has_update_personal_faction = parser_->HasFunction("UpdatePersonalFaction", package_name_);
+	m_has_is_immune_to_spell = parser_->HasFunction("IsImmuneToSpell", package_name_);
 }
 
 void PutDamageHitInfo(lua_State *L, luabind::adl::object &e, DamageHitInfo &hit) {
@@ -1189,6 +1190,58 @@ void LuaMod::UpdatePersonalFaction(Mob *self, int32 npc_value, int32 faction_id,
 			auto return_value_obj = ret["return_value"];
 			if (luabind::type(return_value_obj) == LUA_TNUMBER) {
 				return_value = luabind::object_cast<int64>(return_value_obj);
+			}
+		}
+	}
+	catch (std::exception &ex) {
+		parser_->AddError(ex.what());
+	}
+
+	int end = lua_gettop(L);
+	int n = end - start;
+	if (n > 0) {
+		lua_pop(L, n);
+	}
+}
+
+void LuaMod::IsImmuneToSpell(Mob *self, Mob* caster, uint16 spell_id, bool &return_value, bool &ignore_default)
+{
+	int start = lua_gettop(L);
+
+	try {
+		if (!m_has_is_immune_to_spell) {
+			return;
+		}
+
+		lua_getfield(L, LUA_REGISTRYINDEX, package_name_.c_str());
+		lua_getfield(L, -1, "IsImmuneToSpell");
+
+		Lua_Mob l_self(self);
+		Lua_Mob l_other(caster);
+		luabind::adl::object e = luabind::newtable(L);
+		e["self"] = l_self;
+		e["caster"] = l_other;
+		e["spell_id"] = spell_id;
+
+		e.push(L);
+
+		if (lua_pcall(L, 1, 1, 0)) {
+			std::string error = lua_tostring(L, -1);
+			parser_->AddError(error);
+			lua_pop(L, 2);
+			return;
+		}
+
+		if (lua_type(L, -1) == LUA_TTABLE) {
+			luabind::adl::object ret(luabind::from_stack(L, -1));
+			auto ignore_default_obj = ret["ignore_default"];
+			if (luabind::type(ignore_default_obj) == LUA_TBOOLEAN) {
+				ignore_default = ignore_default || luabind::object_cast<bool>(ignore_default_obj);
+			}
+
+			auto return_value_obj = ret["return_value"];
+			if (luabind::type(return_value_obj) == LUA_TBOOLEAN) {
+				return_value = luabind::object_cast<bool>(return_value_obj);
 			}
 		}
 	}

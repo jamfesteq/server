@@ -1668,6 +1668,15 @@ int32 LuaParser::UpdatePersonalFaction(Mob *self, int32 npc_value, int32 faction
 	return retval;
 }
 
+bool LuaParser::IsImmuneToSpell(Mob *self, Mob *caster, uint16 spell_id, bool &ignore_default)
+{
+	bool retval = false;
+	for (auto &mod : mods_) {
+		mod.IsImmuneToSpell(self, caster, spell_id, retval, ignore_default);
+	}
+	return retval;
+}
+
 int LuaParser::EventBot(
 	QuestEventID evt,
 	Bot *bot,
