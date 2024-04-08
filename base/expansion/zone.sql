@@ -7,3 +7,5 @@ UPDATE zone SET shutdowndelay = '60000';
 UPDATE zone SET fast_regen_hp = 60 where short_name != 'potorment';
 UPDATE zone SET fast_regen_mana = 60 where short_name != 'potorment';
 UPDATE zone SET fast_regen_endurance = 60 where short_name != 'potorment';
+
+UPDATE zone SET min_expansion = 10, min_status = 0 WHERE expansion = 10;
