@@ -9,7 +9,7 @@ source 7-god/rules.sql;
 source 8-oow/rules.sql;
 source 9-don/rules.sql;
 source 10-dodh/rules.sql;
-#source 11-por/rules.sql;
+source 11-por/rules.sql;
 #source 12-tss/rules.sql;
 #source 13-tbs/rules.sql;
 #source 14-sof/rules.sql;

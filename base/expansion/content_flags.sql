@@ -9,7 +9,7 @@ source 7-god/content_flags.sql;
 source 8-oow/content_flags.sql;
 source 9-don/content_flags.sql;
 source 10-dodh/content_flags.sql;
-#source 11-por/content_flags.sql;
+source 11-por/content_flags.sql;
 #source 12-tss/content_flags.sql;
 #source 13-tbs/content_flags.sql;
 #source 14-sof/content_flags.sql;

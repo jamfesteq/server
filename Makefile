@@ -126,6 +126,9 @@ queryserv:
 	@-rm build/bin/logs/query_server*.log
 	cd build/bin && ./queryserv
 
+valgrind-%:
+	cd build/bin && valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=logs/$*.valgrind.log ./$*
+
 # Start mariaDB standalone
 .PHONY: mariadb
 mariadb:
