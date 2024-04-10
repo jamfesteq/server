@@ -54,11 +54,6 @@ set-version:
 	sed -i 's/#define VERSION ".*/#define VERSION "$(VERSION)-$(shell git show --format=%h -s)"/g' common/version.h
 	@echo "VERSION=${VERSION}-$(shell git show --format=%h -s)" >> $$GITHUB_ENV
 
-
-MARIADB_VERSION := 11.2.2
-MARIADB_FOLDER := mariadb-${MARIADB_VERSION}-linux-systemd-x86_64
-OS := $(shell uname -s)
-
 .PHONY: prep
 prep:
 	@echo "Preparing build/bin for usage..."
@@ -134,43 +129,6 @@ valgrind-%:
 mariadb:
 	@sudo service mariadb start
 
-# Backs up the database
-.PHONY: backup-db
-backup-db:
-	@echo "Backing up the database and zipping it..."
-	@-rm -rf build/bin/db/backup
-	@-mkdir -p build/bin/db/backup
-	cd build/bin/db/${MARIADB_FOLDER}/bin && ./mariabackup --defaults-file=${PWD}/build/bin/db/my.cnf --backup --user=${USER} --socket=${PWD}//var/run/mysqld/mysqld.sock --target-dir=${PWD}/build/bin/db/backup
-	cd build/bin/db && tar -czvf backup.tar.gz backup
-	@-rm -rf build/bin/db/backup
-	@echo "Backup complete. The file is located at build/bin/db/backup.tar.gz"
-
-# Restores the database
-.PHONY: restore-db
-restore-db:
-	@echo "Restoring the database from backup..."
-	@-mkdir -p build/bin/db/backup
-	cd build/bin/db && tar -xf backup.tar.gz
-	cd build/bin/db/${MARIADB_FOLDER}/bin && ./mariabackup --defaults-file=${PWD}/build/bin/db/my.cnf --prepare --user=${USER} --socket=${PWD}//var/run/mysqld/mysqld.sock --target-dir=${PWD}/build/bin/db/backup
-	cd build/bin/db && rm -rf backup.tar.gz
-	@echo "Restore complete."
-
-# Initializes a standalone copy of mariadb-server
-.PHONY: init-db
-init-mariadb:
-	@echo "Initializing a standalone copy of mariadb-server..."
-	@-mkdir -p build/bin/db
-	@-sudo service mariadb start
-	@# old way, kept for history reasons for portable edition
-	@#cd build/bin/db && wget -nc https://mirrors.xtom.com/mariadb//mariadb-${MARIADB_VERSION}/bintar-linux-systemd-x86_64/${MARIADB_FOLDER}.tar.gz
-	@#cd build/bin/db && pv ${MARIADB_FOLDER}.tar.gz | tar -xz
-	@#cp -R -u -p base/my.cnf build/bin/db/my.cnf
-	@#cd build/bin/db/${MARIADB_FOLDER}/scripts && ./mariadb-install-db --defaults-file=${PWD}/build/bin/db/my.cnf --datadir=${PWD}/build/bin/db/data --basedir=${PWD}/build/bin/db/${MARIADB_FOLDER}
-	@#cd build/bin/db/${MARIADB_FOLDER}/bin && ./mysqld_safe --initialize-insecure --datadir=${PWD}/build/bin/db/data --defaults-file=${PWD}/build/bin/db/my.cnf
-	@#echo "MariaDB is now initialized. Use 'make mariadb' to run it."
-	@echo "MariaDB is now initialized."
-
-
 .PHONY: inject-mariadb
 inject-mariadb:
 	-sudo service mariadb start
@@ -231,3 +189,7 @@ inject-content-flags:
 
 inject-npc-types:
 	cd base/expansion && sudo mariadb --database peq -e "source npc_types.sql"
+
+backup:
+	@mkdir -p build/bin/backup
+	cd build/bin && ./world database:dump --compress --player-tables --state-tables --system-tables --query-serv-tables
