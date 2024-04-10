@@ -69,7 +69,7 @@ UPDATE rule_values SET rule_value='true' WHERE rule_name='HotReload:QuestsAutoRe
 
 UPDATE rule_values SET rule_value='5' WHERE rule_name='NPC:OOCRegen';
 
-UPDATE rule_values SET rule_value='true' WHERE rule_name='Zone:QuestsReloadOnBootup';
+UPDATE rule_values SET rule_value='false' WHERE rule_name='Zone:QuestsReloadOnBootup';
 
 Update rule_values SET rule_value='false' WHERE rule_name='Combat:MeleePush';
 Update rule_values SET rule_value='false' WHERE rule_name='Spells:NPCSpellPush';
