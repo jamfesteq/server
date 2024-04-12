@@ -87,3 +87,18 @@ You can optionally debug by attaching via gdb to the running processes. This is 
 1. Press CTRL+SHIFT+D or the debug icon on left pane, and select a (gdb) [processType] for what you want to debug
 1. When your code reaches said break point, you will get a call stack and variable dump on left
 1. While the break point is triggered, all code is frozen, so a connection client will slowly disconnect if you're not quick to resume the breakpoint
+
+
+## Pulling master in
+
+```
+git remote add eqemu git@github.com:eqemu/server.git
+git fetch eqemu
+git checkout -b eqemu-master eqemu/master
+git checkout main
+git branch xackery/2024-03-18 # create a new branch based on latest main
+git checkout xackery/2024-03-18 # switch to the new branch
+git merge eqemu-master xackery/2024-03-18 # merge all the changes
+git remote rm eqemu # remove the eqemu-master remote ref
+git branch -d eqemu-master # remove the eqemu-master branch locally
+```
