@@ -168,27 +168,8 @@ depends:
 	@echo "Common..."
 	time python3 build/depends/dependency_graph.py -f png common build/depends/common.dot
 
-inject-all:
-	make inject-aa
-	make inject-rule
-	make inject-zone
-	make inject-content-flags
-	@#make inject-npc-types
-
-inject-aa:
-	cd base/expansion && sudo mariadb --database peq -e "source aa.sql"
-
-inject-rule:
-	cd base/expansion && sudo mariadb --database peq -e "source rules.sql"
-
-inject-zone:
-	cd base/expansion && sudo mariadb --database peq -e "source zone.sql"
-
-inject-content-flags:
-	cd base/expansion && sudo mariadb --database peq -e "source content_flags.sql"
-
-inject-npc-types:
-	cd base/expansion && sudo mariadb --database peq -e "source npc_types.sql"
+inject:
+	cd base/expansion && make inject
 
 backup:
 	@mkdir -p build/bin/backup

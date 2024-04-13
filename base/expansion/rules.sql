@@ -1,24 +1,3 @@
-source 0-classic/rules.sql;
-source 1-kunark/rules.sql;
-source 2-velious/rules.sql;
-source 3-luclin/rules.sql;
-source 4-pop/rules.sql;
-source 5-loy/rules.sql;
-source 6-ldon/rules.sql;
-source 7-god/rules.sql;
-source 8-oow/rules.sql;
-source 9-don/rules.sql;
-source 10-dodh/rules.sql;
-source 11-por/rules.sql;
-#source 12-tss/rules.sql;
-#source 13-tbs/rules.sql;
-#source 14-sof/rules.sql;
-#source 15-sod/rules.sql;
-#source 16-uf/rules.sql;
-#source 17-hot/rules.sql;
-#source 18-voa/rules.sql;
-#source 19-rof/rules.sql;
-
 # Jamfest Overrides
 
 UPDATE rule_values SET rule_value='This is an early alpha of jamfest. Currently on Depths of Darkhollow, #opt in to cool commands to speed things up. Check out https://jamfesteq.com for patcher and intro. Expect characters to be deleted for beta. Guildmasters are handy, hail them.' WHERE rule_name='World:MOTD';
