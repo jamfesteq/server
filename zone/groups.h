@@ -52,8 +52,15 @@ public:
 	Group(uint32 gid);
 	~Group();
 
-	bool	AddMember(Mob* newmember, const char* NewMemberName = nullptr, uint32 CharacterID = 0, bool ismerc = false);
-	void	AddMember(const char* NewMemberName);
+	struct AddToGroupRequest {
+		Mob* mob = nullptr;
+		// Only used cross-zone, otherwise use Mob* mob
+		std::string member_name  = std::string();
+		uint32      character_id = 0;
+	};
+
+	bool	AddMember(Mob* new_member, std::string new_member_name = std::string(), uint32 character_id = 0, bool is_merc = false);
+	void	AddMember(const std::string& new_member_name);
 	void	SendUpdate(uint32 type,Mob* member);
 	void	SendLeadershipAAUpdate();
 	void	SendWorldGroup(uint32 zone_id,Mob* zoningmember);
@@ -69,7 +76,7 @@ public:
 	bool	IsGroup()			{ return true; }
 	void	SendGroupJoinOOZ(Mob* NewMember);
 	void	CastGroupSpell(Mob* caster,uint16 spellid);
-	void	SplitExp(const uint64 exp, Mob* other, ExpSource exp_source);
+	void	SplitExp(ExpSource exp_source, const uint64 exp, Mob* other);
 	void	GroupMessage(Mob* sender,uint8 language,uint8 lang_skill,const char* message);
 	void	GroupMessageString(Mob* sender, uint32 type, uint32 string_id, const char* message,const char* message2=0,const char* message3=0,const char* message4=0,const char* message5=0,const char* message6=0,const char* message7=0,const char* message8=0,const char* message9=0, uint32 distance = 0);
 	uint32	GetTotalGroupDamage(Mob* other);
@@ -145,6 +152,9 @@ public:
 	void	SetDirtyAutoHaters();
 	inline XTargetAutoHaters *GetXTargetAutoMgr() { return &m_autohatermgr; }
 	void	JoinRaidXTarget(Raid *raid, bool first = false);
+	void	AddToGroup(AddToGroupRequest r);
+	void	AddToGroup(Mob* m);
+	static void	RemoveFromGroup(Mob* m);
 
 	void SetGroupMentor(int percent, char *name);
 	void ClearGroupMentor();

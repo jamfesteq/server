@@ -69,10 +69,12 @@ extern volatile bool RunLoops;
 #include "../common/repositories/discovered_items_repository.h"
 #include "../common/repositories/inventory_repository.h"
 #include "../common/repositories/keyring_repository.h"
+#include "../common/repositories/tradeskill_recipe_repository.h"
 #include "../common/events/player_events.h"
 #include "../common/events/player_event_logs.h"
 #include "dialogue_window.h"
 #include "../common/zone_store.h"
+#include "../common/skill_caps.h"
 
 
 extern QueryServ* QServ;
@@ -2226,8 +2228,8 @@ void Client::ChangeLastName(std::string last_name) {
 bool Client::ChangeFirstName(const char* in_firstname, const char* gmname)
 {
 	// check duplicate name
-	bool usedname = database.CheckUsedName((const char*) in_firstname);
-	if (!usedname) {
+	bool used_name = database.IsNameUsed((const char*) in_firstname);
+	if (used_name) {
 		return false;
 	}
 
@@ -2295,29 +2297,23 @@ void Client::ReadBook(BookRequest_Struct *book) {
 
 		BookText_Struct *out = (BookText_Struct *) outapp->pBuffer;
 		out->window = book->window;
-
-
-		if (ClientVersion() >= EQ::versions::ClientVersion::SoF) {
-			// SoF+ need to look up book type for the output message.
-			const EQ::ItemInstance *inst = nullptr;
-
-			if (book->invslot <= EQ::invbag::GENERAL_BAGS_END)
-			{
-				inst = m_inv[book->invslot];
-			}
-
-			if(inst)
-				out->type = inst->GetItem()->Book;
-			else
-				out->type = book->type;
-		}
-		else {
-			out->type = book->type;
-		}
+		out->type = book->type;
 		out->invslot = book->invslot;
 		out->target_id = book->target_id;
 		out->can_cast = 0; // todo: implement
-		out->can_scribe = 0; // todo: implement
+		out->can_scribe = false;
+
+		if (ClientVersion() >= EQ::versions::ClientVersion::SoF && book->invslot <= EQ::invbag::GENERAL_BAGS_END)
+		{
+			const EQ::ItemInstance* inst = m_inv[book->invslot];
+			if (inst && inst->GetItem())
+			{
+				auto recipe = TradeskillRecipeRepository::GetWhere(content_db,
+					fmt::format("learned_by_item_id = {} LIMIT 1", inst->GetItem()->ID));
+				out->type = inst->GetItem()->Book;
+				out->can_scribe = !recipe.empty();
+			}
+		}
 
 		memcpy(out->booktext, booktxt2.c_str(), length);
 
@@ -2762,31 +2758,48 @@ void Client::CheckLanguageSkillIncrease(uint8 language_id, uint8 teacher_skill) 
 	}
 }
 
-bool Client::HasSkill(EQ::skills::SkillType skill_id) const {
-	return((GetSkill(skill_id) > 0) && CanHaveSkill(skill_id));
-}
-
-bool Client::CanHaveSkill(EQ::skills::SkillType skill_id) const {
-	if (ClientVersion() < EQ::versions::ClientVersion::RoF2 && class_ == Class::Berserker && skill_id == EQ::skills::Skill1HPiercing)
-		skill_id = EQ::skills::Skill2HPiercing;
-
-	return(content_db.GetSkillCap(GetClass(), skill_id, RuleI(Character, MaxLevel)) > 0);
-	//if you don't have it by max level, then odds are you never will?
-}
-
-uint16 Client::MaxSkill(EQ::skills::SkillType skillid, uint16 class_, uint16 level) const {
-	if (ClientVersion() < EQ::versions::ClientVersion::RoF2 && class_ == Class::Berserker && skillid == EQ::skills::Skill1HPiercing)
-		skillid = EQ::skills::Skill2HPiercing;
-
-	return(content_db.GetSkillCap(class_, skillid, level));
-}
-
-uint8 Client::SkillTrainLevel(EQ::skills::SkillType skillid, uint16 class_)
+bool Client::HasSkill(EQ::skills::SkillType skill_id) const
 {
-	if (ClientVersion() < EQ::versions::ClientVersion::RoF2 && class_ == Class::Berserker && skillid == EQ::skills::Skill1HPiercing)
-		skillid = EQ::skills::Skill2HPiercing;
+	return GetSkill(skill_id) > 0 && CanHaveSkill(skill_id);
+}
 
-	return(content_db.GetTrainLevel(class_, skillid, RuleI(Character, MaxLevel)));
+bool Client::CanHaveSkill(EQ::skills::SkillType skill_id) const
+{
+	if (
+		ClientVersion() < EQ::versions::ClientVersion::RoF2 &&
+		class_ == Class::Berserker &&
+		skill_id == EQ::skills::Skill1HPiercing
+	) {
+		skill_id = EQ::skills::Skill2HPiercing;
+	}
+
+	return skill_caps.GetSkillCap(GetClass(), skill_id, RuleI(Character, MaxLevel)).cap > 0;
+}
+
+uint16 Client::MaxSkill(EQ::skills::SkillType skill_id, uint8 class_id, uint8 level) const
+{
+	if (
+		ClientVersion() < EQ::versions::ClientVersion::RoF2 &&
+		class_id == Class::Berserker &&
+		skill_id == EQ::skills::Skill1HPiercing
+	) {
+		skill_id = EQ::skills::Skill2HPiercing;
+	}
+
+	return skill_caps.GetSkillCap(class_id, skill_id, level).cap;
+}
+
+uint8 Client::SkillTrainLevel(EQ::skills::SkillType skill_id, uint8 class_id)
+{
+	if (
+		ClientVersion() < EQ::versions::ClientVersion::RoF2 &&
+		class_id == Class::Berserker &&
+		skill_id == EQ::skills::Skill1HPiercing
+	) {
+		skill_id = EQ::skills::Skill2HPiercing;
+	}
+
+	return skill_caps.GetTrainLevel(class_id, skill_id, RuleI(Character, MaxLevel));
 }
 
 uint16 Client::GetMaxSkillAfterSpecializationRules(EQ::skills::SkillType skillid, uint16 maxSkill)
@@ -3792,14 +3805,12 @@ void Client::GetRaidAAs(RaidLeadershipAA_Struct *into) const {
 
 void Client::EnteringMessages(Client* client)
 {
-	std::string rules;
-	if (database.GetVariable("Rules", rules)) {
-		uint8 flag = database.GetAgreementFlag(client->AccountID());
+	std::string rules = RuleS(World, Rules);
+
+	if (!rules.empty() || database.GetVariable("Rules", rules)) {
+		const uint8 flag = database.GetAgreementFlag(client->AccountID());
 		if (!flag) {
-			auto rules_link = Saylink::Silent(
-				"#serverrules",
-				"rules"
-			);
+			const std::string& rules_link = Saylink::Silent("#serverrules", "rules");
 
 			client->Message(
 				Chat::White,
@@ -3816,9 +3827,9 @@ void Client::EnteringMessages(Client* client)
 
 void Client::SendRules()
 {
-	std::string rules;
+	std::string rules = RuleS(World, Rules);
 
-	if (!database.GetVariable("Rules", rules)) {
+	if (rules.empty() && !database.GetVariable("Rules", rules)) {
 		return;
 	}
 
@@ -3889,7 +3900,7 @@ void Client::Sacrifice(Client *caster)
 	if (GetLevel() >= RuleI(Spells, SacrificeMinLevel) && GetLevel() <= RuleI(Spells, SacrificeMaxLevel)) {
 		int exploss = (int)(GetLevel() * (GetLevel() / 18.0) * 12000);
 		if (exploss < GetEXP()) {
-			SetEXP(GetEXP() - exploss, GetAAXP(), false, ExpSource::Sacrifice);
+			SetEXP(ExpSource::Sacrifice, GetEXP() - exploss, GetAAXP(), false);
 			SendLogoutPackets();
 
 			// make our become corpse packet, and queue to ourself before OP_Death.
@@ -4450,7 +4461,7 @@ bool Client::GroupFollow(Client* inviter) {
 			}
 
 			//now we have a group id, can set inviter's id
-			database.SetGroupID(inviter->GetName(), group->GetID(), inviter->CharacterID(), false);
+			group->AddToGroup(inviter);
 			database.SetGroupLeaderName(group->GetID(), inviter->GetName());
 			group->UpdateGroupAAs();
 
@@ -4996,15 +5007,15 @@ void Client::HandleLDoNOpen(NPC *target)
 			{
 				if(GetRaid())
 				{
-					GetRaid()->SplitExp(target->GetLevel()*target->GetLevel()*2625/10, target, ExpSource::LDoNChest);
+					GetRaid()->SplitExp(ExpSource::LDoNChest, target->GetLevel()*target->GetLevel()*2625/10, target);
 				}
 				else if(GetGroup())
 				{
-					GetGroup()->SplitExp(target->GetLevel()*target->GetLevel()*2625/10, target, ExpSource::LDoNChest);
+					GetGroup()->SplitExp(ExpSource::LDoNChest, target->GetLevel()*target->GetLevel()*2625/10, target);
 				}
 				else
 				{
-					AddEXP(target->GetLevel()*target->GetLevel()*2625/10, GetLevelCon(target->GetLevel()), false, ExpSource::LDoNChest);
+					AddEXP(ExpSource::LDoNChest, target->GetLevel()*target->GetLevel()*2625/10, GetLevelCon(target->GetLevel()));
 				}
 			}
 			target->Death(this, 0, SPELL_UNKNOWN, EQ::skills::SkillHandtoHand);
@@ -5206,7 +5217,7 @@ void Client::SummonAndRezzAllCorpses()
 	int RezzExp = entity_list.RezzAllCorpsesByCharID(CharacterID());
 
 	if(RezzExp > 0)
-		SetEXP(GetEXP() + RezzExp, GetAAXP(), true, ExpSource::Resurrection);
+		SetEXP(ExpSource::Resurrection, GetEXP() + RezzExp, GetAAXP(), true);
 
 	Message(Chat::Yellow, "All your corpses have been summoned to your feet and have received a 100% resurrection.");
 }
@@ -7642,7 +7653,6 @@ int32 Client::GetCharacterFactionLevel(int32 faction_id)
 
 void Client::UpdatePersonalFaction(int32 char_id, int32 npc_value, int32 faction_id, int32 *current_value, int32 temp, int32 this_faction_min, int32 this_faction_max)
 {
-
 	bool repair = false;
 	bool change = false;
 
@@ -8284,7 +8294,7 @@ void Client::QuestReward(Mob* target, uint32 copper, uint32 silver, uint32 gold,
 	}
 
 	if (exp > 0) {
-		AddEXP(exp, 0xFF, false, ExpSource::Quest);
+		AddEXP(ExpSource::Quest, exp);
 	}
 
 	QueuePacket(outapp, true, Client::CLIENT_CONNECTED);
@@ -8329,7 +8339,7 @@ void Client::QuestReward(Mob* target, const QuestReward_Struct &reward, bool fac
 	}
 
 	if (reward.exp_reward > 0) {
-		AddEXP(reward.exp_reward, 0xFF, false, ExpSource::Quest);
+		AddEXP(ExpSource::Quest, reward.exp_reward);
 	}
 
 	QueuePacket(outapp, true, Client::CLIENT_CONNECTED);
@@ -9253,6 +9263,7 @@ void Client::ShowDevToolsMenu()
 	menu_reload_six += " | " + Saylink::Silent("#reload quest", "Quests");
 
 	menu_reload_seven += Saylink::Silent("#reload rules", "Rules");
+	menu_reload_seven += " | " + Saylink::Silent("#reload skill_caps", "Skill Caps");
 	menu_reload_seven += " | " + Saylink::Silent("#reload static", "Static Zone Data");
 	menu_reload_seven += " | " + Saylink::Silent("#reload tasks", "Tasks");
 
@@ -11802,7 +11813,7 @@ void Client::MaxSkills()
 		auto current_skill_value = (
 			EQ::skills::IsSpecializedSkill(s.first) ?
 			MAX_SPECIALIZED_SKILL :
-			content_db.GetSkillCap(GetClass(), s.first, GetLevel())
+			skill_caps.GetSkillCap(GetClass(), s.first, GetLevel()).cap
 		);
 
 		if (GetSkill(s.first) < current_skill_value) {
