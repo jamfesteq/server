@@ -37,35 +37,36 @@ expansion-8: expansion-7
 	cd 8-oow && sudo mariadb --database peq -e "source rules.sql"
 
 expansion-9: expansion-8
-	cd 9-don and sudo mariadb --database peq -e "source content_flags.sql"
-	cd 9-don and sudo mariadb --database peq -e "source rules.sql"
+	cd 9-don && sudo mariadb --database peq -e "source content_flags.sql"
+	cd 9-don && sudo mariadb --database peq -e "source rules.sql"
 
 expansion-10: expansion-9
-	cd 10-dodh and sudo mariadb --database peq -e "source rules.sql"
+	cd 10-dodh && sudo mariadb --database peq -e "source rules.sql"
 
 expansion-11: expansion-10
-	cd 11-por and sudo mariadb --database peq -e "source rules.sql"
+	cd 11-por && sudo mariadb --database peq -e "source rules.sql"
+	cd 11-por && sudo mariadb --database peq -e "source zone.sql"
 
 expansion-12: expansion-11
-	cd 12-tss and sudo mariadb --database peq -e "source rules.sql"
+	cd 12-tss && sudo mariadb --database peq -e "source rules.sql"
 
 expansion-13: expansion-12
-	cd 13-tbs and sudo mariadb --database peq -e "source rules.sql"
+	cd 13-tbs && sudo mariadb --database peq -e "source rules.sql"
 
 expansion-14: expansion-13
-	cd 14-sof and sudo mariadb --database peq -e "source rules.sql"
+	cd 14-sof && sudo mariadb --database peq -e "source rules.sql"
 
 expansion-15: expansion-14
-	cd 15-sod and sudo mariadb --database peq -e "source rules.sql"
+	cd 15-sod && sudo mariadb --database peq -e "source rules.sql"
 
 expansion-16: expansion-15
-	cd 16-uf and sudo mariadb --database peq -e "source rules.sql"
+	cd 16-uf && sudo mariadb --database peq -e "source rules.sql"
 
 expansion-17: expansion-16
-	cd 17-hot and sudo mariadb --database peq -e "source rules.sql"
+	cd 17-hot && sudo mariadb --database peq -e "source rules.sql"
 
 expansion-18: expansion-17
-	cd 18-voa and sudo mariadb --database peq -e "source rules.sql"
+	cd 18-voa && sudo mariadb --database peq -e "source rules.sql"
 
 expansion-19: expansion-18
-	cd 19-rof and sudo mariadb --database peq -e "source rules.sql"
+	cd 19-rof && sudo mariadb --database peq -e "source rules.sql"
