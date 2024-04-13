@@ -26,15 +26,15 @@ void SetEXP(Client *c, const Seperator *sep)
 
 	if (is_aa) {
 		t->SetEXP(
+			ExpSource::GM,
 			t->GetEXP(),
-			amount,
-			ExpSource::GM
+			amount
 		);
 	} else if (is_exp) {
 		t->SetEXP(
+			ExpSource::GM,
 			amount,
-			t->GetAAXP(),
-			ExpSource::GM
+			t->GetAAXP()
 		);
 	}
 

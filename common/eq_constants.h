@@ -1133,7 +1133,6 @@ namespace LeadershipAbilitySlot {
 
 enum ExpSource
 {
-	Unknown,
 	Quest,
 	GM,
 	Kill,

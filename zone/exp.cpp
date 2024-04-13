@@ -497,7 +497,7 @@ void Client::CalculateExp(uint64 in_add_exp, uint64 &add_exp, uint64 &add_aaxp, 
 	add_exp = GetEXP() + add_exp;
 }
 
-void Client::AddEXP(uint64 in_add_exp, uint8 conlevel, bool resexp, ExpSource exp_source) {
+void Client::AddEXP(ExpSource exp_source, uint64 in_add_exp, uint8 conlevel, bool resexp) {
 	if (!IsEXPEnabled()) {
 		return;
 	}
@@ -569,10 +569,10 @@ void Client::AddEXP(uint64 in_add_exp, uint8 conlevel, bool resexp, ExpSource ex
 	}
 
 	// Now update our character's normal and AA xp
-	SetEXP(exp, aaexp, resexp, exp_source);
+	SetEXP(exp_source, exp, aaexp, resexp);
 }
 
-void Client::SetEXP(uint64 set_exp, uint64 set_aaxp, bool isrezzexp, ExpSource exp_source) {
+void Client::SetEXP(ExpSource exp_source, uint64 set_exp, uint64 set_aaxp, bool isrezzexp) {
 	uint64 current_exp = GetEXP();
 	uint64 current_aa_exp = GetAAXP();
 	uint64 total_current_exp = current_exp + current_aa_exp;
@@ -1102,7 +1102,7 @@ uint32 Client::GetEXPForLevel(uint16 check_level)
 	return finalxp;
 }
 
-void Client::AddLevelBasedExp(uint8 exp_percentage, uint8 max_level, bool ignore_mods, ExpSource exp_source)
+void Client::AddLevelBasedExp(ExpSource exp_source, uint8 exp_percentage, uint8 max_level, bool ignore_mods)
 {
 	uint64	award;
 	uint64	xp_for_level;
@@ -1131,10 +1131,10 @@ void Client::AddLevelBasedExp(uint8 exp_percentage, uint8 max_level, bool ignore
 	}
 
 	uint64 newexp = GetEXP() + award;
-	SetEXP(newexp, GetAAXP(), false, exp_source);
+	SetEXP(exp_source, newexp, GetAAXP(), false);
 }
 
-void Group::SplitExp(const uint64 exp, Mob* other, ExpSource exp_source) {
+void Group::SplitExp(ExpSource exp_source, const uint64 exp, Mob* other) {
 	if (other->CastToNPC()->MerchantType != 0) {
 		return;
 	}
@@ -1192,13 +1192,13 @@ void Group::SplitExp(const uint64 exp, Mob* other, ExpSource exp_source) {
 			if (diff >= max_diff) {
 				const uint64 tmp  = (m->GetLevel() + 3) * (m->GetLevel() + 3) * 75 * 35 / 10;
 				const uint64 tmp2 = group_experience / member_count;
-				m->CastToClient()->AddEXP(tmp < tmp2 ? tmp : tmp2, consider_level, false, exp_source);
+				m->CastToClient()->AddEXP(exp_source, tmp < tmp2 ? tmp : tmp2, consider_level);
 			}
 		}
 	}
 }
 
-void Raid::SplitExp(const uint64 exp, Mob* other, ExpSource exp_source) {
+void Raid::SplitExp(ExpSource exp_source, const uint64 exp, Mob* other) {
 	if (other->CastToNPC()->MerchantType != 0) {
 		return;
 	}
@@ -1243,7 +1243,7 @@ void Raid::SplitExp(const uint64 exp, Mob* other, ExpSource exp_source) {
 			if (diff >= max_diff) {
 				const uint64 tmp  = (m.member->GetLevel() + 3) * (m.member->GetLevel() + 3) * 75 * 35 / 10;
 				const uint64 tmp2 = (raid_experience / member_modifier) + 1;
-				m.member->AddEXP(tmp < tmp2 ? tmp : tmp2, consider_level, false, exp_source);
+				m.member->AddEXP(exp_source, tmp < tmp2 ? tmp : tmp2, consider_level);
 			}
 		}
 	}

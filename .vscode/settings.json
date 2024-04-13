@@ -111,7 +111,9 @@
 		"variant": "cpp",
 		"csetjmp": "cpp",
 		"charconv": "cpp",
-		"format": "cpp"
+		"format": "cpp",
+		"ranges": "cpp",
+		"span": "cpp"
 	},
 	"cmake.statusbar.advanced": {
 		"kit": {

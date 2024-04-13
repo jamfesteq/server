@@ -380,12 +380,12 @@ void Perl__settimer(std::string timer_name, uint32 seconds)
 
 void Perl__settimer(std::string timer_name, uint32 seconds, Mob* m)
 {
-	quest_manager.settimer(timer_name, seconds);
+	quest_manager.settimer(timer_name, seconds, m);
 }
 
 void Perl__settimer(std::string timer_name, uint32 seconds, EQ::ItemInstance* inst)
 {
-	quest_manager.settimer(timer_name, seconds);
+	quest_manager.settimerMS(timer_name, seconds * 1000, inst);
 }
 
 void Perl__settimerMS(std::string timer_name, uint32 milliseconds)
@@ -1579,9 +1579,7 @@ std::string Perl__GetCharactersInInstance(uint16 instance_id)
 		char_id_string = fmt::format("{} player(s) in instance: ", character_ids.size());
 		auto iter = character_ids.begin();
 		while (iter != character_ids.end()) {
-			char char_name[64];
-			database.GetCharName(*iter, char_name);
-			char_id_string += char_name;
+			char_id_string += database.GetCharName(*iter);
 			char_id_string += "(";
 			char_id_string += itoa(*iter);
 			char_id_string += ")";
@@ -5842,6 +5840,21 @@ std::string Perl__silent_saylink(std::string text, std::string link_name)
 	return Saylink::Silent(text, link_name);
 }
 
+uint16 Perl__get_class_bitmask(uint8 class_id)
+{
+	return GetPlayerClassBit(class_id);
+}
+
+uint32 Perl__get_deity_bitmask(uint16 deity_id)
+{
+	return static_cast<uint32>(EQ::deity::GetDeityBitmask(static_cast<EQ::deity::DeityType>(deity_id)));
+}
+
+uint16 Perl__get_race_bitmask(uint16 race_id)
+{
+	return GetPlayerRaceBit(race_id);
+}
+
 void perl_register_quest()
 {
 	perl::interpreter perl(PERL_GET_THX);
@@ -6488,9 +6501,11 @@ void perl_register_quest()
 	package.add("getconsiderlevelname", &Perl__getconsiderlevelname);
 	package.add("gethexcolorcode", &Perl__gethexcolorcode);
 	package.add("getcurrencyid", &Perl__getcurrencyid);
+	package.add("get_class_bitmask", &Perl__get_class_bitmask);
 	package.add("get_data", &Perl__get_data);
 	package.add("get_data_expires", &Perl__get_data_expires);
 	package.add("get_data_remaining", &Perl__get_data_remaining);
+	package.add("get_deity_bitmask", &Perl__get_deity_bitmask);
 	package.add("get_dz_task_id", &Perl__get_dz_task_id);
 	package.add("getexpmodifierbycharid", (double(*)(uint32, uint32))&Perl__getexpmodifierbycharid);
 	package.add("getexpmodifierbycharid", (double(*)(uint32, uint32, int16))&Perl__getexpmodifierbycharid);
@@ -6523,6 +6538,7 @@ void perl_register_quest()
 	package.add("getgroupidbycharid", &Perl__getgroupidbycharid);
 	package.add("getinventoryslotname", &Perl__getinventoryslotname);
 	package.add("getraididbycharid", &Perl__getraididbycharid);
+	package.add("get_race_bitmask", &Perl__get_race_bitmask);
 	package.add("get_recipe_component_item_ids", &Perl__GetRecipeComponentItemIDs);
 	package.add("get_recipe_container_item_ids", &Perl__GetRecipeContainerItemIDs);
 	package.add("get_recipe_fail_item_ids", &Perl__GetRecipeFailItemIDs);
@@ -6693,9 +6709,9 @@ void perl_register_quest()
 	package.add("settarget", &Perl__settarget);
 	package.add("settime", (void(*)(int, int))&Perl__settime);
 	package.add("settime", (void(*)(int, int, bool))&Perl__settime);
-	package.add("settimer", (void(*)(std::string, uint32))&Perl__settimer),
-	package.add("settimer", (void(*)(std::string, uint32, EQ::ItemInstance*))&Perl__settimer),
-	package.add("settimer", (void(*)(std::string, uint32, Mob*))&Perl__settimer),
+	package.add("settimer", (void(*)(std::string, uint32))&Perl__settimer);
+	package.add("settimer", (void(*)(std::string, uint32, EQ::ItemInstance*))&Perl__settimer);
+	package.add("settimer", (void(*)(std::string, uint32, Mob*))&Perl__settimer);
 	package.add("settimerMS", (void(*)(std::string, uint32))&Perl__settimerMS);
 	package.add("settimerMS", (void(*)(std::string, uint32, EQ::ItemInstance*))&Perl__settimerMS);
 	package.add("settimerMS", (void(*)(std::string, uint32, Mob*))&Perl__settimerMS);
