@@ -21,9 +21,9 @@ REPLACE INTO `zone_points` (`buffer`, `client_version_mask`, `content_flags`, `c
 # all commons (21) connections now go to commonlands (408)
 UPDATE zone_points SET max_expansion = 10 WHERE id IN (801, 49, 41);
 REPLACE INTO `zone_points` (`buffer`, `client_version_mask`, `content_flags`, `content_flags_disabled`, `heading`, `height`, `id`, `is_virtual`, `max_expansion`, `min_expansion`, `number`, `target_heading`, `target_instance`, `target_x`, `target_y`, `target_z`, `target_zone_id`, `version`, `width`, `x`, `y`, `z`, `zone`, `zoneinst`) VALUES
-(0, 4294967295, NULL, NULL, 0, 0, 4527, 0, 11, -1, 1, 386, 0, 596, -1150, -38, 408, 0, 0, 35.22, -75.27, 3.75, 'befallen', 0),
+(0, 4294967295, NULL, NULL, 0, 0, 4527, 0, 11, -1, 1, 384.75, 0, 1026.41, -1156.17, 44.69, 408, 0, 0, 35.22, -75.27, 3.75, 'befallen', 0),
 (0, 4294967295, NULL, NULL, 0, 0, 4528, 0, 11, -1, 2, 130, 0, -1475, 10.3, -51, 408, 0, 0, 5050, 515, -42, 'ecommons', 0),
-(0, 4294967295, NULL, NULL, 0, 0, 4529, 0, 11, -1, 3, 420, 0, 4216, 904.3, -48.97, 408, 0, 0, -1089, 1464, -48, 'kithicor', 0);
+(0, 4294967295, NULL, NULL, 0, 0, 4529, 0, 11, -1, 3, 259, 0, 3669.36, 1192.14, 40.34, 408, 0, 0, -1089, 1464, -48, 'kithicor', 0);
 
 # all freporte (10) connections now go to freeporteast (382)
 UPDATE zone_points SET max_expansion = 10 WHERE id IN (1309, 1294, 1173, 1172, 1171, 1170, 1169, 1168, 1167, 1166, 1165, 1164, 1163, 686, 390, 386, 385);
