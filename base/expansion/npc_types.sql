@@ -133,7 +133,7 @@ UPDATE spawn2 SET min_expansion = 0 WHERE spawngroupID IN (
 );
 
 # PoK Vendors 61-70
-UPDATE spawn2 SET min_expansion = 99 WHERE spawngroupID IN (
+UPDATE spawn2 SET min_expansion = 0 WHERE spawngroupID IN (
 	SELECT se.spawngroupID from spawnentry se WHERE se.npcID in (
 		202191,
 		202231,
@@ -164,7 +164,7 @@ UPDATE spawn2 SET min_expansion = 99 WHERE spawngroupID IN (
 		202200,
 		202195,
 		202190,
-		202185,
+		202504,
 		202180,
 		202175
 	)

@@ -6,6 +6,7 @@ inject:
 	sudo mariadb --database peq -e "source npc_types.sql"
 	sudo mariadb --database peq -e "source rules.sql"
 	sudo mariadb --database peq -e "source zone.sql"
+	sudo mariadb --database peq -e "source pok_spell.sql"
 
 expansion-0:
 	cd 0-classic && sudo mariadb --database peq -e "source aa.sql"

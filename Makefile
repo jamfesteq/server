@@ -174,3 +174,17 @@ inject:
 backup:
 	@mkdir -p build/bin/backup
 	cd build/bin && ./world database:dump --compress --player-tables --state-tables --system-tables --query-serv-tables
+
+cpu-zone:
+	@cd build/bin && mkdir -p tmp
+	cd build/bin && CPUPROFILE=prof.out ./zone
+
+pprof-zone:
+	cd build/bin && google-pprof --pdf zone prof.out > prof.pdf
+pprof-web-zone:
+	cd build/bin && google-pprof --web zone prof.out
+pprof-gv-zone:
+	cd build/bin && google-pprof --gv zone prof.out > prof.gv
+heap-zone:
+	@cd build/bin && mkdir -p tmp
+	cd build/bin && HEAPPROFILE=prof.out ./zone
