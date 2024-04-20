@@ -1582,25 +1582,6 @@ void LuaParser::RegisterBug(Client *self, BaseBugReportsRepository::BugReports b
 	}
 }
 
-int64 LuaParser::GetActSpellHealing(Mob *self, uint16 spell_id, int64 value, Mob* target, bool from_buff_tic, bool &ignore_default)
-{
-	int64 retval = 0;
-	for (auto &mod : mods_) {
-		mod.GetActSpellHealing(self, spell_id, value, target, from_buff_tic, retval, ignore_default);
-	}
-	return retval;
-}
-
-
-int64 LuaParser::GetActSpellDamage(Mob *self, uint16 spell_id, int64 value, Mob* target, bool &ignore_default)
-{
-	int64 retval = 0;
-	for (auto &mod : mods_) {
-		mod.GetActSpellDamage(self, spell_id, value, target, retval, ignore_default);
-	}
-	return retval;
-}
-
 int64 LuaParser::CommonDamage(Mob *self, Mob* attacker, int64 value, uint16 spell_id, int skill_used, bool avoidable, int8 buff_slot, bool buff_tic, int special, bool &ignore_default)
 {
 	int64 retval = 0;

@@ -2952,6 +2952,7 @@ void Raid::SendMarkTargets(Client* c)
 	}
 
 	for (int i = 0; i < MAX_MARKED_NPCS; i++) {
+
 		if (marked_npcs[i].entity_id > 0 && marked_npcs[i].zone_id == c->GetZoneID()
 			&& marked_npcs[i].instance_id == c->GetInstanceID()) {
 			auto marked_mob = entity_list.GetMob(marked_npcs[i].entity_id);

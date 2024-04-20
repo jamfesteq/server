@@ -45,19 +45,6 @@ int64 Mob::GetActSpellDamage(uint16 spell_id, int64 value, Mob* target) {
 		return value;
 	}
 
-#ifdef LUA_EQEMU
-	int64 lua_ret = 0;
-	bool ignore_default = false;
-	lua_ret = LuaParser::Instance()->GetActSpellDamage(this, spell_id, value, target, ignore_default);
-	if (lua_ret != 0) {
-		value = lua_ret;
-	}
-
-	if (ignore_default) {
-		return lua_ret;
-	}
-#endif
-
 	if (IsNPC()) {
 		value += value * CastToNPC()->GetSpellFocusDMG() / 100;
 
@@ -423,19 +410,6 @@ int64 Mob::GetActSpellHealing(uint16 spell_id, int64 value, Mob* target, bool fr
 	if (target == nullptr && IsBot()) {
 		target = this;
 	}
-
-#ifdef LUA_EQEMU
-	int64 lua_ret = 0;
-	bool ignore_default = false;
-	lua_ret = LuaParser::Instance()->GetActSpellHealing(this, spell_id, value, target, from_buff_tic, ignore_default);
-	if (lua_ret != 0) {
-		value = lua_ret;
-	}
-
-	if (ignore_default) {
-		return lua_ret;
-	}
-#endif
 
 	if (IsNPC()) {
 		value += value * CastToNPC()->GetSpellFocusHeal() / 100;

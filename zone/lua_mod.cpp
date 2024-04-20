@@ -38,15 +38,13 @@ void LuaMod::Init()
 	m_has_common_outgoing_hit_success = parser_->HasFunction("CommonOutgoingHitSuccess", package_name_);
 	m_has_calc_spell_effect_value_formula = parser_->HasFunction("CalcSpellEffectValue_formula", package_name_);
 	m_has_register_bug = parser_->HasFunction("RegisterBug", package_name_);
-	m_has_get_act_spell_healing = parser_->HasFunction("GetActSpellHealing", package_name_);
-	m_has_get_act_spell_damage = parser_->HasFunction("GetActSpellDamage", package_name_);
-	m_has_common_damage = parser_->HasFunction("CommonDamage", package_name_);
-	m_has_heal_damage = parser_->HasFunction("HealDamage", package_name_);
 	m_has_resist_spell_roll = parser_->HasFunction("ResistSpellRoll", package_name_);
 	m_has_set_exp = parser_->HasFunction("SetEXP", package_name_);
 	m_has_set_aa_exp = parser_->HasFunction("SetAAEXP", package_name_);
 	m_has_update_personal_faction = parser_->HasFunction("UpdatePersonalFaction", package_name_);
 	m_has_is_immune_to_spell = parser_->HasFunction("IsImmuneToSpell", package_name_);
+	m_has_common_damage = parser_->HasFunction("CommonDamage", package_name_);
+	m_has_heal_damage = parser_->HasFunction("HealDamage", package_name_);
 }
 
 void PutDamageHitInfo(lua_State *L, luabind::adl::object &e, DamageHitInfo &hit) {
@@ -758,114 +756,6 @@ void LuaMod::RegisterBug(Client *self, BaseBugReportsRepository::BugReports bug,
 		lua_pop(L, n);
 	}
 }
-
-void LuaMod::GetActSpellHealing(Mob *self, uint16 spell_id, int64 value, Mob* target, bool from_buff_tic, int64 &return_value, bool &ignore_default)
-{
-	int start = lua_gettop(L);
-
-	try {
-		if (!m_has_get_act_spell_healing) {
-			return;
-		}
-
-		lua_getfield(L, LUA_REGISTRYINDEX, package_name_.c_str());
-		lua_getfield(L, -1, "GetActSpellHealing");
-
-		Lua_Mob l_self(self);
-		Lua_Mob l_target(target);
-		luabind::adl::object e = luabind::newtable(L);
-		e["self"] = l_self;
-		e["spell_id"] = spell_id;
-		e["value"] = value;
-		e["target"] = l_target;
-		e["from_buff_tic"] = from_buff_tic;
-		e.push(L);
-
-		if (lua_pcall(L, 1, 1, 0)) {
-			std::string error = lua_tostring(L, -1);
-			parser_->AddError(error);
-			lua_pop(L, 2);
-			return;
-		}
-
-		if (lua_type(L, -1) == LUA_TTABLE) {
-			luabind::adl::object ret(luabind::from_stack(L, -1));
-			auto ignore_default_obj = ret["ignore_default"];
-			if (luabind::type(ignore_default_obj) == LUA_TBOOLEAN) {
-				ignore_default = ignore_default || luabind::object_cast<bool>(ignore_default_obj);
-			}
-
-			auto return_value_obj = ret["return_value"];
-			if (luabind::type(return_value_obj) == LUA_TNUMBER) {
-				return_value = luabind::object_cast<int64>(return_value_obj);
-			}
-		}
-	}
-	catch (std::exception &ex) {
-		parser_->AddError(ex.what());
-	}
-
-	int end = lua_gettop(L);
-	int n = end - start;
-	if (n > 0) {
-		lua_pop(L, n);
-	}
-}
-
-
-void LuaMod::GetActSpellDamage(Mob *self, uint16 spell_id, int64 value, Mob* target, int64 &return_value, bool &ignore_default)
-{
-	int start = lua_gettop(L);
-
-	try {
-		if (!m_has_get_act_spell_damage) {
-			return;
-		}
-
-		lua_getfield(L, LUA_REGISTRYINDEX, package_name_.c_str());
-		lua_getfield(L, -1, "GetActSpellDamage");
-
-		Lua_Mob l_self(self);
-		Lua_Mob l_target(target);
-		luabind::adl::object e = luabind::newtable(L);
-		e["self"] = l_self;
-		e["spell_id"] = spell_id;
-		e["value"] = value;
-		e["target"] = l_target;
-		e.push(L);
-
-		if (lua_pcall(L, 1, 1, 0)) {
-			std::string error = lua_tostring(L, -1);
-			parser_->AddError(error);
-			lua_pop(L, 2);
-			return;
-		}
-
-		if (lua_type(L, -1) == LUA_TTABLE) {
-			luabind::adl::object ret(luabind::from_stack(L, -1));
-			auto ignore_default_obj = ret["ignore_default"];
-			if (luabind::type(ignore_default_obj) == LUA_TBOOLEAN) {
-				ignore_default = ignore_default || luabind::object_cast<bool>(ignore_default_obj);
-			}
-
-			auto return_value_obj = ret["return_value"];
-			if (luabind::type(return_value_obj) == LUA_TNUMBER) {
-				return_value = luabind::object_cast<int64>(return_value_obj);
-			}
-		}
-	}
-	catch (std::exception &ex) {
-		parser_->AddError(ex.what());
-	}
-
-	int end = lua_gettop(L);
-	int n = end - start;
-	if (n > 0) {
-		lua_pop(L, n);
-	}
-}
-
-
 
 void LuaMod::CommonDamage(Mob *self, Mob* attacker, int64 value, uint16 spell_id, int skill_used, bool avoidable, int8 buff_slot, bool buff_tic, int special, int64 &return_value, bool &ignore_default)
 {

@@ -31,13 +31,13 @@ public:
 	void RegisterBug(Client *self, BaseBugReportsRepository::BugReports bug, bool &ignore_default);
 	void GetActSpellHealing(Mob *self, uint16 spell_id, int64 value, Mob* target, bool from_buff_tic, int64 &return_value, bool &ignore_default);
 	void GetActSpellDamage(Mob *self, uint16 spell_id, int64 value, Mob* target, int64 &return_value, bool &ignore_default);
-	void CommonDamage(Mob *self, Mob* attacker, int64 value, uint16 spell_id, int skill_used, bool avoidable, int8 buff_slot, bool buff_tic, int special, int64 &return_value, bool &ignore_default);
-	void HealDamage(Mob *self, Mob* caster, uint64 value, uint16 spell_id, uint64 &return_value, bool &ignore_default);
 	void ResistSpellRoll(Mob *self, Mob* caster, int roll, int roll_max, int resist_chance, uint8 resist_type, uint16 spell_id, bool use_resist_override, int resist_override, bool is_charisma_check, bool is_charm_tick, bool is_root, int level_override, int resist_modifier, int &return_value, bool &ignore_default);
 	void SetEXP(Mob *self, ExpSource exp_source, uint64 current_exp, uint64 set_exp, bool is_rezz_exp, uint64 &return_value, bool &ignore_default);
 	void SetAAEXP(Mob *self, ExpSource exp_source, uint64 current_aa_exp, uint64 set_aa_exp, bool is_rezz_exp, uint64 &return_value, bool &ignore_default);
 	void UpdatePersonalFaction(Mob *self, int32 npc_value, int32 faction_id, int32 current_value, int32 temp, int32 this_faction_min, int32 this_faction_max, int32 &return_value, bool &ignore_default);
 	void IsImmuneToSpell(Mob *self, Mob* caster, uint16 spell_id, bool &return_value, bool &ignore_default);
+	void CommonDamage(Mob *self, Mob* attacker, int64 value, uint16 spell_id, int skill_used, bool avoidable, int8 buff_slot, bool buff_tic, int special, int64 &return_value, bool &ignore_default);
+	void HealDamage(Mob *self, Mob* caster, uint64 value, uint16 spell_id, uint64 &return_value, bool &ignore_default);
 private:
 	LuaParser *parser_;
 	lua_State *L;
@@ -54,13 +54,11 @@ private:
 	bool m_has_get_experience_for_kill;
 	bool m_has_calc_spell_effect_value_formula;
 	bool m_has_register_bug;
-	bool m_has_get_act_spell_healing;
-	bool m_has_get_act_spell_damage;
-	bool m_has_common_damage;
-	bool m_has_heal_damage;
 	bool m_has_resist_spell_roll;
 	bool m_has_set_exp;
 	bool m_has_set_aa_exp;
 	bool m_has_update_personal_faction;
 	bool m_has_is_immune_to_spell;
+	bool m_has_common_damage;
+	bool m_has_heal_damage;
 };

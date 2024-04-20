@@ -44,33 +44,37 @@ This is an alternative that is less integrated with VSCode, but works for just b
 1. Navigate to build/bin/eqemu_config.json and edit the lines `10.0.0.10` to your LAN ip, e.g. 192.168.1.5, if this is incorrect, at server select you'll just "freeze connecting" until timeout
 1. Inside build/bin/eqemu_config.json edit the server name from `Jamfest Devbox` to `Jamfest MyName Devbox`, replacing MyName with your user name
 
-## Setup 5: Run shared memory
+## Setup 5: Add expansion rules
+
+This is only needed if you are wanting jamfest customizations.
+
+1. Open a new terminal in VSCode (ctrl+~) or your preferred terminal
+1. Run `make inject-all`
+1. This applies zone, rules, aas.
+
+
+## Setup 6: Run shared memory
 
 1. Open a terminal in VSCode (ctrl+~) or your preferred terminal
 1. Run `make shared`. On success, it should return to the terminal at end
 1. Above should only need to be ran once, or if you modify items, skill caps, spells, and other expansion tweaks, it may need to be ran again while the server is fully shut down
 
-## Setup 6: Run world
+## Setup 7: Run world
 
 1. Open a terminal in VSCode (ctrl+~) or your preferred terminal
 1. Run `make world`. On success, it should be idle and not return to an empty prompt
 
-## Setup 7: Run zone
+## Setup 8: Run zone
 
 1. Open a new terminal in VSCode (ctrl+~) or your preferred terminal
 1. Run `make zone`. On success, it should be idle. If you switch back to world, you should see an event about zone connecting
 
-## Setup 8: Log in and set yourself GM
+## Setup 9: Log in and set yourself GM
 
 1. Using a rof2 client where eqhost.txt is set to projecteq's login will make your debox server appear under `[D] Jamfest MyName Devbox`
 1. When you first log in, the world console should say like "SetOnline Online Status [foo] (1) status [Online]
 1. You can run `make gm-foo` to update your status to 255, replacing foo with your name
 
-## Setup 9: Add expansion rules
-
-1. Open a new terminal in VSCode (ctrl+~) or your preferred terminal
-1. Run `make inject-all`
-1. This applies zone, rules, aas.
 
 ## Setup 10: Optional, get maps
 
@@ -96,9 +100,9 @@ git remote add eqemu git@github.com:eqemu/server.git
 git fetch eqemu
 git checkout -b eqemu-master eqemu/master
 git checkout main
-git branch xackery/2024-03-18 # create a new branch based on latest main
-git checkout xackery/2024-03-18 # switch to the new branch
-git merge eqemu-master xackery/2024-03-18 # merge all the changes
+git branch xackery/2024-04-18 # create a new branch based on latest main
+git checkout xackery/2024-04-18 # switch to the new branch
+git merge eqemu-master xackery/2024-04-18 --allow-unrelated-histories # merge all the changes
 git remote rm eqemu # remove the eqemu-master remote ref
 git branch -d eqemu-master # remove the eqemu-master branch locally
 ```
