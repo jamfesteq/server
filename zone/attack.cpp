@@ -2720,7 +2720,7 @@ bool NPC::Death(Mob* killer_mob, int64 damage, uint16 spell, EQ::skills::SkillTy
 			if (!is_ldon_treasure && !MerchantType) {
 				const uint32 con_level = give_exp->GetLevelCon(GetLevel());
 
-				if (con_level != CON_GRAY) {
+				if (con_level != ConsiderColor::Gray) {
 					if (!GetOwner() || (GetOwner() && !GetOwner()->IsClient())) {
 						give_exp_client->AddEXP(ExpSource::Kill, final_exp, con_level);
 
@@ -3976,12 +3976,8 @@ void Mob::CommonDamage(Mob* attacker, int64 &damage, const uint16 spell_id, cons
 	int64 lua_ret = 0;
 	bool ignore_default = false;
 	lua_ret = LuaParser::Instance()->CommonDamage(this, attacker, damage, spell_id, static_cast<int>(skill_used), avoidable, buffslot, iBuffTic, static_cast<int>(special), ignore_default);
-	if (lua_ret != 0) {
-		damage = lua_ret;
-	}
-
 	if (ignore_default) {
-		//return lua_ret;
+		damage = lua_ret;
 	}
 #endif
 	// This method is called with skill_used=ABJURE for Damage Shield damage.
@@ -4058,7 +4054,7 @@ void Mob::CommonDamage(Mob* attacker, int64 &damage, const uint16 spell_id, cons
 				Mob *owner = GetOwner();
 				if (owner && owner->IsClient()) {
 					if (GetPetOrder() == SPO_Sit) {
-						SetPetOrder(SPO_Follow);
+						SetPetOrder(GetPreviousPetOrder());
 					}
 					// fix GUI sit button to be unpressed and stop sitting regen
 					owner->CastToClient()->SetPetCommandState(PET_BUTTON_SIT, 0);
@@ -4088,11 +4084,11 @@ void Mob::CommonDamage(Mob* attacker, int64 &damage, const uint16 spell_id, cons
 			!pet->IsHeld()
 		) {
 			LogAggro("Sending pet [{}] into battle due to attack", pet->GetName());
-			if (IsClient()) {
-				// if pet was sitting his new mode is follow
-				// following after the battle (live verified)
+			if (IsClient() && !pet->IsPetStop()) {
+				// if pet was sitting his new mode is previous setting of
+				// follow or guard after the battle (live verified)
 				if (pet->GetPetOrder() == SPO_Sit) {
-					pet->SetPetOrder(SPO_Follow);
+					pet->SetPetOrder(pet->GetPreviousPetOrder());
 				}
 
 				// fix GUI sit button to be unpressed and stop sitting regen
@@ -4677,9 +4673,9 @@ void Mob::CommonDamage(Mob* attacker, int64 &damage, const uint16 spell_id, cons
 	else {
 		//else, it is a buff tic...
 		// So we can see our dot dmg like live shows it.
-		if (IsValidSpell(spell_id) && damage > 0 && attacker && attacker != this && !attacker->IsCorpse()) {
+		if (IsValidSpell(spell_id) && damage > 0 && attacker && attacker != this) {
 			//might filter on (attack_skill>200 && attack_skill<250), but I dont think we need it
-			if (attacker->IsClient()) {
+			if (!attacker->IsCorpse() && attacker->IsClient()) {
 				attacker->FilteredMessageString(attacker, Chat::DotDamage,
 					FilterDOT, YOUR_HIT_DOT, GetCleanName(), itoa(damage),
 					spells[spell_id].name);
@@ -4716,12 +4712,8 @@ void Mob::HealDamage(uint64 amount, Mob* caster, uint16 spell_id)
 	bool ignore_default = false;
 
 	lua_ret = LuaParser::Instance()->HealDamage(this, caster, amount, spell_id, ignore_default);
-	if (lua_ret != 0) {
-		amount = lua_ret;
-	}
-
 	if (ignore_default) {
-		//return lua_ret;
+		amount = lua_ret;
 	}
 #endif
 	int64 maxhp = GetMaxHP();
